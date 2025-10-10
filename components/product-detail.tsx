@@ -10,7 +10,24 @@ import { useCart } from "@/contexts/cart-context"
 import { useRouter } from "next/navigation"
 
 interface ProductDetailProps {
-  product: any
+  product: {
+    id: string
+    name: string
+    slug: string
+    description: string
+    longDescription: string
+    price: number
+    categoryId: string
+    images: string[]
+    sizes: string[]
+    colors: { name: string; hex: string }[]
+    stock: Record<string, number>
+    featured: boolean
+    inStock: boolean
+    category: string
+    categorySlug: string
+    createdAt: string
+  }
 }
 
 export function ProductDetail({ product }: ProductDetailProps) {
@@ -21,9 +38,37 @@ export function ProductDetail({ product }: ProductDetailProps) {
   const { addItem } = useCart()
   const router = useRouter()
 
+  // Vérifier si la taille est en stock
+  const isSizeInStock = (size: string) => {
+    return product.stock[size] !== undefined && product.stock[size] > 0
+  }
+
+  // Vérifier si la quantité demandée est disponible
+  const isQuantityAvailable = () => {
+    return selectedSize && product.stock[selectedSize] >= quantity
+  }
+
+  // Vérifier si le produit a au moins une taille en stock
+  const hasAnySizeInStock = () => {
+    return Object.values(product.stock).some((qty) => qty > 0)
+  }
+
+  const handleSizeSelect = (size: string) => {
+    if (isSizeInStock(size)) {
+      setSelectedSize(size)
+    } else {
+      alert(`La taille ${size} n'est pas disponible en stock.`)
+    }
+  }
+
   const handleAddToCart = () => {
     if (!selectedSize) {
       alert("Veuillez sélectionner une taille")
+      return
+    }
+
+    if (!isQuantityAvailable()) {
+      alert(`Quantité insuffisante en stock pour la taille ${selectedSize}. Stock disponible: ${product.stock[selectedSize]}`)
       return
     }
 
@@ -36,10 +81,10 @@ export function ProductDetail({ product }: ProductDetailProps) {
         longDescription: product.longDescription,
         price: product.price,
         images: product.images,
-        category: product.category?.name || "",
+        category: product.category,
         sizes: product.sizes,
         colors: product.colors,
-        inStock: product.inStock,
+        inStock: hasAnySizeInStock(),
         featured: product.featured,
       },
       quantity,
@@ -67,10 +112,10 @@ export function ProductDetail({ product }: ProductDetailProps) {
                 alt={product.name}
                 className="w-full h-full object-cover"
               />
-              {!product.inStock && (
+              {!hasAnySizeInStock() && (
                 <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
                   <Badge variant="secondary" className="text-lg px-6 py-2">
-                    Rupture de stock
+                    Sold Out
                   </Badge>
                 </div>
               )}
@@ -102,7 +147,7 @@ export function ProductDetail({ product }: ProductDetailProps) {
             <div>
               {product.category && (
                 <Badge variant="outline" className="mb-3">
-                  {product.category.name}
+                  {product.category}
                 </Badge>
               )}
               <h1 className="text-4xl font-serif font-bold mb-2">{product.name}</h1>
@@ -125,7 +170,7 @@ export function ProductDetail({ product }: ProductDetailProps) {
             <div>
               <h3 className="text-lg font-light mb-3">Couleur: {selectedColor}</h3>
               <div className="flex gap-3">
-                {product.colors.map((color: any) => (
+                {product.colors.map((color: { name: string; hex: string }) => (
                   <button
                     key={color.name}
                     onClick={() => setSelectedColor(color.name)}
@@ -148,12 +193,13 @@ export function ProductDetail({ product }: ProductDetailProps) {
                 {product.sizes.map((size: string) => (
                   <button
                     key={size}
-                    onClick={() => setSelectedSize(size)}
+                    onClick={() => handleSizeSelect(size)}
                     className={`py-3 rounded-lg border-2 transition-all font-light ${
                       selectedSize === size
                         ? "border-primary bg-primary text-primary-foreground"
                         : "border-border hover:border-primary/50"
-                    }`}
+                    } ${!isSizeInStock(size) ? "bg-gray-300 text-gray-500 cursor-not-allowed" : ""}`} // Rendu gris pour hors stock
+                    disabled={!isSizeInStock(size)}
                   >
                     {size}
                   </button>
@@ -169,7 +215,7 @@ export function ProductDetail({ product }: ProductDetailProps) {
                   variant="outline"
                   size="icon"
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  disabled={quantity <= 1}
+                  disabled={quantity <= 1 || !isQuantityAvailable()}
                 >
                   <Minus className="h-4 w-4" />
                 </Button>
@@ -177,11 +223,16 @@ export function ProductDetail({ product }: ProductDetailProps) {
                 <Button
                   variant="outline"
                   size="icon"
-                  onClick={() => setQuantity(quantity + 1)}
-                  disabled={quantity >= 10}
+                  onClick={() => setQuantity(Math.min(quantity + 1, product.stock[selectedSize] || 0))}
+                  disabled={!isQuantityAvailable()}
                 >
                   <Plus className="h-4 w-4" />
                 </Button>
+                {selectedSize && (
+                  <p className="text-sm text-muted-foreground">
+                    Stock disponible: {product.stock[selectedSize] || 0}
+                  </p>
+                )}
               </div>
             </div>
 
@@ -193,10 +244,10 @@ export function ProductDetail({ product }: ProductDetailProps) {
                 size="lg"
                 className="w-full font-light tracking-wide"
                 onClick={handleAddToCart}
-                disabled={!product.inStock}
+                disabled={!selectedSize || !isQuantityAvailable()}
               >
                 <ShoppingBag className="mr-2 h-5 w-5" />
-                {product.inStock ? "Ajouter au panier" : "Rupture de stock"}
+                {isQuantityAvailable() ? "Ajouter au panier" : "Stock insuffisant"}
               </Button>
               <div className="grid grid-cols-2 gap-3">
                 <Button variant="outline" size="lg" className="font-light bg-transparent">
@@ -214,7 +265,7 @@ export function ProductDetail({ product }: ProductDetailProps) {
             <Card className="p-6 bg-secondary/30">
               <h3 className="text-lg font-light mb-4">Détails du produit</h3>
               <ul className="space-y-2 text-sm text-muted-foreground font-light">
-                {product.category && <li>• Catégorie: {product.category.name}</li>}
+                {product.category && <li>• Catégorie: {product.category}</li>}
                 <li>• Livraison gratuite à partir de 100€</li>
                 <li>• Retours gratuits sous 30 jours</li>
                 <li>• Paiement sécurisé</li>
