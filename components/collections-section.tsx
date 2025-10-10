@@ -5,8 +5,16 @@ import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import Link from "next/link"
 
+// Définir une interface pour les catégories
+interface Category {
+  id: string
+  name: string
+  slug: string
+  description: string
+}
+
 export function CollectionsSection() {
-  const [categories, setCategories] = useState<any[]>([])
+  const [categories, setCategories] = useState<Category[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -14,7 +22,12 @@ export function CollectionsSection() {
       try {
         const res = await fetch("/api/categories")
         const data = await res.json()
-        setCategories(data.categories || [])
+        // Vérifie que data.categories est un tableau et le caste correctement
+        if (Array.isArray(data.categories)) {
+          setCategories(data.categories)
+        } else {
+          setCategories([])
+        }
       } catch (error) {
         console.error("[v0] Error fetching categories:", error)
       } finally {
@@ -33,6 +46,14 @@ export function CollectionsSection() {
         </div>
       </section>
     )
+  }
+
+  // Typage de categoryImages avec les clés possibles
+  const categoryImages: Record<string, string> = {
+    "Homme": "/home-section.jpg",
+    "Femme": "/femme-section.jpg",
+    //"Enfant": "/images/collections/enfant.jpg",
+    // Ajoute d'autres catégories ici
   }
 
   return (
@@ -55,7 +76,7 @@ export function CollectionsSection() {
               >
                 <div className="relative overflow-hidden">
                   <img
-                    src={`/.jpg?height=400&width=600&query=${category.name} collection fashion`}
+                    src={categoryImages[category.name] || "/images/collections/default.jpg"} // Utilise l'image par défaut si la clé n'existe pas
                     alt={category.name}
                     className="w-full h-80 object-cover group-hover:scale-105 transition-transform duration-500"
                   />
