@@ -166,6 +166,15 @@ export function AdminDashboard() {
                   ))}
                 </div>
               )}
+              {/* Bouton pour accéder à la gestion des commandes */}
+              <div className="mt-6 text-right">
+                <Link href="/admin/orders">
+                  <Button size="lg" variant="default" className="font-medium">
+                    <Edit className="h-5 w-5 mr-2" />
+                    Gérer les Commandes
+                  </Button>
+                </Link>
+              </div>
             </Card>
           </TabsContent>
 

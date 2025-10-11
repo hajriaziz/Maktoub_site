@@ -7,19 +7,85 @@ import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
+// Définition des interfaces pour typer les données
+interface Item {
+  id: string
+  product_name: string
+  size: string
+  color: string
+  quantity: number
+  unit_price: number
+}
+
+interface Address {
+  address_line: string
+  city: string
+  postal_code: string
+  country: string
+}
+
+interface Customer {
+  first_name: string
+  last_name: string
+  email: string
+  phone: string | null
+}
+
+interface Order {
+  id: string
+  order_number: string
+  status: string
+  total_amount: number
+  created_at: string
+  updated_at: string
+  customer: Customer
+  address: Address
+  items: Item[]
+  subtotal?: number // Optionnel
+  shipping_cost?: number // Optionnel
+  total?: number // Optionnel
+}
+
 export function AdminOrders() {
-  const [orders, setOrders] = useState<any[]>([])
+  const [orders, setOrders] = useState<Order[]>([])
   const [loading, setLoading] = useState(false)
-  const [searchEmail, setSearchEmail] = useState("")
+  const [searchOrderNumber, setSearchOrderNumber] = useState("")
 
   async function searchOrders() {
-    if (!searchEmail) return
+    if (!searchOrderNumber) {
+      console.log("No order number provided, search aborted.")
+      return
+    }
 
     try {
       setLoading(true)
-      const res = await fetch(`/api/orders?email=${encodeURIComponent(searchEmail)}`)
+      console.log(`Fetching orders for order_number: ${searchOrderNumber}`)
+      const res = await fetch(`/api/orders?order_number=${encodeURIComponent(searchOrderNumber)}`)
       const data = await res.json()
-      setOrders(data.orders || [])
+      console.log("Raw API Response:", data)
+
+      if (!data.success) {
+        console.error("API returned failure:", data.error)
+        setOrders([])
+        return
+      }
+
+      if (!Array.isArray(data.orders)) {
+        console.error("Expected 'orders' to be an array, got:", data.orders)
+        setOrders([])
+        return
+      }
+
+      // Vérification des données avant de les setter avec valeurs par défaut
+      const validOrders = data.orders.map((order: Order) => ({
+        ...order,
+        items: Array.isArray(order.items) ? order.items : [],
+        subtotal: order.total_amount || 0, // Valeur par défaut si absent
+        shipping_cost: order.shipping_cost || 0, // Valeur par défaut si absent
+        total: order.total_amount || 0, // Valeur par défaut si absent
+      }))
+      setOrders(validOrders)
+      console.log("Orders set to:", validOrders)
     } catch (error) {
       console.error("[v0] Error searching orders:", error)
     } finally {
@@ -52,13 +118,13 @@ export function AdminOrders() {
         <Card className="p-6 mb-8">
           <div className="flex gap-4">
             <div className="flex-1">
-              <Label htmlFor="email">Rechercher par email client</Label>
+              <Label htmlFor="orderNumber">Rechercher par numéro de commande</Label>
               <Input
-                id="email"
-                type="email"
-                placeholder="client@email.com"
-                value={searchEmail}
-                onChange={(e) => setSearchEmail(e.target.value)}
+                id="orderNumber"
+                type="text"
+                placeholder="Ex: MKT-1634567890123"
+                value={searchOrderNumber}
+                onChange={(e) => setSearchOrderNumber(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && searchOrders()}
               />
             </div>
@@ -73,100 +139,103 @@ export function AdminOrders() {
           {orders.length === 0 ? (
             <Card className="p-8 text-center">
               <p className="text-muted-foreground">
-                {searchEmail
-                  ? "Aucune commande trouvée pour cet email"
-                  : "Entrez un email pour rechercher des commandes"}
+                {searchOrderNumber
+                  ? "Aucune commande trouvée pour ce numéro"
+                  : "Entrez un numéro de commande pour rechercher"}
               </p>
             </Card>
           ) : (
-            orders.map((order) => (
-              <Card key={order.id} className="p-6">
-                <div className="flex items-start justify-between mb-4">
-                  <div>
-                    <h3 className="text-xl font-bold mb-1">{order.order_number}</h3>
-                    <p className="text-sm text-muted-foreground">
-                      {new Date(order.created_at).toLocaleDateString("fr-FR", {
-                        day: "numeric",
-                        month: "long",
-                        year: "numeric",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                    </p>
+            orders.map((order: Order) => {
+              console.log("Rendering order:", order)
+              return (
+                <Card key={order.id} className="p-6">
+                  <div className="flex items-start justify-between mb-4">
+                    <div>
+                      <h3 className="text-xl font-bold mb-1">{order.order_number}</h3>
+                      <p className="text-sm text-muted-foreground">
+                        {new Date(order.created_at).toLocaleDateString("fr-FR", {
+                          day: "numeric",
+                          month: "long",
+                          year: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </p>
+                    </div>
+                    <Badge variant={order.status === "pending" ? "secondary" : "default"}>{order.status}</Badge>
                   </div>
-                  <Badge variant={order.status === "pending" ? "secondary" : "default"}>{order.status}</Badge>
-                </div>
 
-                {/* Customer Info */}
-                <div className="mb-4">
-                  <h4 className="font-medium mb-2">Client</h4>
-                  <p className="text-sm">
-                    {order.customer?.first_name} {order.customer?.last_name}
-                  </p>
-                  <p className="text-sm text-muted-foreground">{order.customer?.email}</p>
-                  <p className="text-sm text-muted-foreground">{order.customer?.phone}</p>
-                </div>
-
-                {/* Address */}
-                {order.address && (
+                  {/* Customer Info */}
                   <div className="mb-4">
-                    <h4 className="font-medium mb-2">Adresse de livraison</h4>
-                    <p className="text-sm">{order.address.address_line}</p>
+                    <h4 className="font-medium mb-2">Client</h4>
                     <p className="text-sm">
-                      {order.address.postal_code} {order.address.city}
+                      {order.customer?.first_name || "N/A"} {order.customer?.last_name || "N/A"}
                     </p>
-                    <p className="text-sm">{order.address.country}</p>
+                    <p className="text-sm text-muted-foreground">{order.customer?.email || "N/A"}</p>
+                    <p className="text-sm text-muted-foreground">{order.customer?.phone || "N/A"}</p>
                   </div>
-                )}
 
-                {/* Items */}
-                <div className="mb-4">
-                  <h4 className="font-medium mb-2">Articles</h4>
-                  <div className="space-y-2">
-                    {order.items?.map((item: any, index: number) => (
-                      <div key={index} className="flex justify-between text-sm">
-                        <span>
-                          {item.product_name} ({item.selected_size}, {item.selected_color}) x{item.quantity}
-                        </span>
-                        <span className="font-medium">{item.subtotal.toFixed(2)}€</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+                  {/* Address */}
+                  {order.address && (
+                    <div className="mb-4">
+                      <h4 className="font-medium mb-2">Adresse de livraison</h4>
+                      <p className="text-sm">{order.address.address_line || "N/A"}</p>
+                      <p className="text-sm">
+                        {order.address.postal_code || ""} {order.address.city || ""}
+                      </p>
+                      <p className="text-sm">{order.address.country || "N/A"}</p>
+                    </div>
+                  )}
 
-                {/* Total */}
-                <div className="border-t pt-4 mb-4">
-                  <div className="flex justify-between mb-1">
-                    <span className="text-sm">Sous-total</span>
-                    <span className="text-sm">{order.subtotal.toFixed(2)}€</span>
+                  {/* Items */}
+                  <div className="mb-4">
+                    <h4 className="font-medium mb-2">Articles</h4>
+                    <div className="space-y-2">
+                      {(order.items || []).map((item: Item, index: number) => (
+                        <div key={index} className="flex justify-between text-sm">
+                          <span>
+                            {item.product_name || "N/A"} ({item.size || "N/A"}, {item.color || "N/A"}) x{item.quantity || 0}
+                          </span>
+                          <span className="font-medium">{(item.unit_price || 0).toFixed(2)}€</span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                  <div className="flex justify-between mb-2">
-                    <span className="text-sm">Livraison</span>
-                    <span className="text-sm">{order.shipping_cost.toFixed(2)}€</span>
-                  </div>
-                  <div className="flex justify-between font-bold text-lg">
-                    <span>Total</span>
-                    <span className="text-accent">{order.total.toFixed(2)}€</span>
-                  </div>
-                </div>
 
-                {/* Actions */}
-                <div className="flex gap-2">
-                  <Button size="sm" variant="outline" onClick={() => updateOrderStatus(order.id, "processing")}>
-                    En cours
-                  </Button>
-                  <Button size="sm" variant="outline" onClick={() => updateOrderStatus(order.id, "shipped")}>
-                    Expédié
-                  </Button>
-                  <Button size="sm" variant="outline" onClick={() => updateOrderStatus(order.id, "delivered")}>
-                    Livré
-                  </Button>
-                  <Button size="sm" variant="outline" onClick={() => updateOrderStatus(order.id, "cancelled")}>
-                    Annulé
-                  </Button>
-                </div>
-              </Card>
-            ))
+                  {/* Total */}
+                  <div className="border-t pt-4 mb-4">
+                    <div className="flex justify-between mb-1">
+                      <span className="text-sm">Sous-total</span>
+                      <span className="text-sm">{(order.subtotal || 0).toFixed(2)}€</span> {/* Ajout de la vérification */}
+                    </div>
+                    <div className="flex justify-between mb-2">
+                      <span className="text-sm">Livraison</span>
+                      <span className="text-sm">{(order.shipping_cost || 0).toFixed(2)}€</span> {/* Ajout de la vérification */}
+                    </div>
+                    <div className="flex justify-between font-bold text-lg">
+                      <span>Total</span>
+                      <span className="text-accent">{(order.total || 0).toFixed(2)}€</span> {/* Ajout de la vérification */}
+                    </div>
+                  </div>
+
+                  {/* Actions */}
+                  <div className="flex gap-2">
+                    <Button size="sm" variant="outline" onClick={() => updateOrderStatus(order.id, "processing")}>
+                      En cours
+                    </Button>
+                    <Button size="sm" variant="outline" onClick={() => updateOrderStatus(order.id, "shipped")}>
+                      Expédié
+                    </Button>
+                    <Button size="sm" variant="outline" onClick={() => updateOrderStatus(order.id, "delivered")}>
+                      Livré
+                    </Button>
+                    <Button size="sm" variant="outline" onClick={() => updateOrderStatus(order.id, "cancelled")}>
+                      Annulé
+                    </Button>
+                  </div>
+                </Card>
+              )
+            })
           )}
         </div>
       </div>

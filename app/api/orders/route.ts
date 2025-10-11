@@ -136,7 +136,7 @@ export async function POST(request: NextRequest) {
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
-    const email = searchParams.get("email")
+    const orderNumber = searchParams.get("order_number")
 
     let sql = `
       SELECT 
@@ -172,9 +172,9 @@ export async function GET(request: NextRequest) {
 
     const params: any[] = []
 
-    if (email) {
-      sql += " WHERE c.email = ?"
-      params.push(email)
+    if (orderNumber) {
+      sql += " WHERE o.order_number = ?"
+      params.push(orderNumber)
     }
 
     sql += `
@@ -185,9 +185,12 @@ export async function GET(request: NextRequest) {
     `
 
     const rows = await query<any>(sql, params)
+    console.log("Raw DB Rows:", rows) // Ajout pour déboguer les lignes brutes
 
     const orders = rows.map((row) => {
+      console.log("Processing row:", row) // Débogage par ligne
       const itemsData = row.items_data ? row.items_data.split("|||") : []
+      console.log("Items data split:", itemsData) // Vérifie le parsing des items
       const items = itemsData.map((itemStr: string) => {
         const [id, product_name, size, color, quantity, unit_price] = itemStr.split("::")
         return {
