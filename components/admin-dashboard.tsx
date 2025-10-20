@@ -27,17 +27,16 @@ export function AdminDashboard() {
     try {
       setLoading(true)
 
-      // Fetch products
-      const productsRes = await fetch("/api/products")
+      const headers = { Authorization: `Bearer ${localStorage.getItem("token")}` }
+
+      const productsRes = await fetch("/api/products", { headers })
       const productsData = await productsRes.json()
       setProducts(productsData.products || [])
 
-      // Fetch orders
-      const ordersRes = await fetch("/api/orders")
+      const ordersRes = await fetch("/api/orders", { headers })
       const ordersData = await ordersRes.json()
       setOrders(ordersData.orders || [])
 
-      // Calculate stats
       const totalOrders = ordersData.orders?.length || 0
       const totalRevenue = ordersData.orders?.reduce((sum: number, order: any) => sum + order.total_amount, 0) || 0
       const pendingOrders = ordersData.orders?.filter((order: any) => order.status === "pending").length || 0
@@ -59,7 +58,10 @@ export function AdminDashboard() {
     try {
       const res = await fetch(`/api/orders/${orderId}`, {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
         body: JSON.stringify({ status: newStatus }),
       })
 
@@ -86,7 +88,6 @@ export function AdminDashboard() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <h1 className="text-4xl font-serif font-bold mb-8">Tableau de bord</h1>
 
-        {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <Card className="p-6">
             <div className="flex items-center justify-between mb-2">
@@ -95,7 +96,6 @@ export function AdminDashboard() {
             </div>
             <p className="text-3xl font-bold">{stats.totalOrders}</p>
           </Card>
-
           <Card className="p-6">
             <div className="flex items-center justify-between mb-2">
               <p className="text-sm text-muted-foreground font-light">Revenu total</p>
@@ -103,7 +103,6 @@ export function AdminDashboard() {
             </div>
             <p className="text-3xl font-bold">{stats.totalRevenue.toFixed(2)}€</p>
           </Card>
-
           <Card className="p-6">
             <div className="flex items-center justify-between mb-2">
               <p className="text-sm text-muted-foreground font-light">Produits</p>
@@ -111,7 +110,6 @@ export function AdminDashboard() {
             </div>
             <p className="text-3xl font-bold">{stats.totalProducts}</p>
           </Card>
-
           <Card className="p-6">
             <div className="flex items-center justify-between mb-2">
               <p className="text-sm text-muted-foreground font-light">En attente</p>
@@ -121,15 +119,12 @@ export function AdminDashboard() {
           </Card>
         </div>
 
-        {/* Tabs */}
         <Tabs defaultValue="orders" className="space-y-6">
           <TabsList>
             <TabsTrigger value="orders">Commandes</TabsTrigger>
             <TabsTrigger value="products">Produits</TabsTrigger>
             <TabsTrigger value="stock">Stock</TabsTrigger>
           </TabsList>
-
-          {/* Orders Tab */}
           <TabsContent value="orders" className="space-y-4">
             <Card className="p-6">
               <h2 className="text-2xl font-serif font-bold mb-6">Commandes récentes</h2>
@@ -166,7 +161,6 @@ export function AdminDashboard() {
                   ))}
                 </div>
               )}
-              {/* Bouton pour accéder à la gestion des commandes */}
               <div className="mt-6 text-right">
                 <Link href="/admin/orders">
                   <Button size="lg" variant="default" className="font-medium">
@@ -177,8 +171,6 @@ export function AdminDashboard() {
               </div>
             </Card>
           </TabsContent>
-
-          {/* Products Tab */}
           <TabsContent value="products" className="space-y-4">
             <Card className="p-6">
               <h2 className="text-2xl font-serif font-bold mb-6">Gestion des produits</h2>
@@ -211,8 +203,6 @@ export function AdminDashboard() {
               </div>
             </Card>
           </TabsContent>
-
-          {/* Stock Tab */}
           <TabsContent value="stock" className="space-y-4">
             <Card className="p-6">
               <h2 className="text-2xl font-serif font-bold mb-6">Gestion du stock</h2>

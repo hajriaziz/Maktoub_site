@@ -23,9 +23,7 @@ export function Navigation() {
               alt="Maktoub Logo"
               className="h-15 w-auto" // Ajuste la hauteur selon tes besoins
             />
-            
           </Link>
-
           {/* Desktop Navigation */}
           <div className="hidden md:block">
             <div className="ml-10 flex items-baseline space-x-8">
@@ -59,7 +57,7 @@ export function Navigation() {
           {/* Right side */}
           <div className="hidden md:flex items-center space-x-4">
             <Link href="/cart">
-              <Button variant="ghost" size="sm" className="text-foreground hover:text-accent relative">
+              <Button variant="ghost" size="sm" className="text-foreground relative">
                 <ShoppingBag className="h-5 w-5" />
                 {totalItems > 0 && (
                   <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs bg-accent">

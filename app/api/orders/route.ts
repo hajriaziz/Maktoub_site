@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
     if (typeof total !== 'number') {
       return Response.json({ success: false, error: "Total must be a number" }, { status: 400 })
     }
-    if (!customerInfo.firstName || !customerInfo.lastName || !customerInfo.email || !customerInfo.address || !customerInfo.city || !customerInfo.postalCode) {
+    if (!customerInfo.firstName || !customerInfo.lastName || !customerInfo.email || !customerInfo.address || !customerInfo.city) {
       return Response.json({ success: false, error: "Missing required customer fields" }, { status: 400 })
     }
 
@@ -25,8 +25,8 @@ export async function POST(request: NextRequest) {
       if (!item.productName) missingFields.push("productName");
       if (item.quantity === undefined) missingFields.push("quantity");
       if (item.price === undefined) missingFields.push("price");
-      if (!item.selectedSize) missingFields.push("selectedSize"); // Obligatoire
-      if (!item.selectedColor) missingFields.push("selectedColor"); // Obligatoire
+      if (!item.selectedSize) missingFields.push("selectedSize");
+      if (!item.selectedColor) missingFields.push("selectedColor");
       if (missingFields.length > 0) {
         return Response.json({ success: false, error: `Missing required fields in item ${index}: ${missingFields.join(", ")}` }, { status: 400 })
       }
@@ -64,8 +64,8 @@ export async function POST(request: NextRequest) {
           customerId,
           customerInfo.address,
           customerInfo.city,
-          customerInfo.postalCode,
-          customerInfo.country || "France",
+          customerInfo.postalCode || null, // Optionnel
+          customerInfo.country || "France", // Optionnel, défaut France
         ],
       )
 
@@ -133,6 +133,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
+// Le GET reste inchangé
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
@@ -185,12 +186,12 @@ export async function GET(request: NextRequest) {
     `
 
     const rows = await query<any>(sql, params)
-    console.log("Raw DB Rows:", rows) // Ajout pour déboguer les lignes brutes
+    console.log("Raw DB Rows:", rows)
 
     const orders = rows.map((row) => {
-      console.log("Processing row:", row) // Débogage par ligne
+      console.log("Processing row:", row)
       const itemsData = row.items_data ? row.items_data.split("|||") : []
-      console.log("Items data split:", itemsData) // Vérifie le parsing des items
+      console.log("Items data split:", itemsData)
       const items = itemsData.map((itemStr: string) => {
         const [id, product_name, size, color, quantity, unit_price] = itemStr.split("::")
         return {

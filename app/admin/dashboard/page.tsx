@@ -2,13 +2,12 @@
 
 import { Navigation } from "@/components/navigation"
 import { Footer } from "@/components/footer"
-import { AdminOrders } from "@/components/admin-orders"
-import { useRouter } from "next/navigation"
+import { AdminDashboard } from "@/components/admin-dashboard"
 import { useEffect } from "react"
+import { useRouter } from "next/navigation"
 
-
-export default function AdminOrdersPage() {
-    const router = useRouter()
+export default function AdminPage() {
+  const router = useRouter()
 
   useEffect(() => {
     const token = typeof window !== "undefined" ? localStorage.getItem("token") : null
@@ -21,7 +20,7 @@ export default function AdminOrdersPage() {
   return (
     <main className="min-h-screen">
       <Navigation />
-      <AdminOrders />
+      <AdminDashboard />
       <Footer />
     </main>
   )

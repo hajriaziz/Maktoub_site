@@ -87,7 +87,7 @@ export function CollectionsSection() {
                   <h3 className="text-xl font-light mb-3 text-foreground">{category.name}</h3>
                   <p className="text-muted-foreground font-light mb-4 text-pretty">{category.description}</p>
                   <Link href={`/collections/${category.slug}`}>
-                    <Button variant="ghost" className="p-0 h-auto font-light text-accent hover:text-accent/80">
+                    <Button variant="ghost" className="p-0 h-auto font-light text-accent ">
                       Découvrir →
                     </Button>
                   </Link>

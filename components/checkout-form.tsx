@@ -31,7 +31,7 @@ export function CheckoutForm() {
   const shippingCost = totalPrice >= 100 ? 0 : 9.99
   const finalTotal = totalPrice + shippingCost
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
@@ -52,8 +52,8 @@ export function CheckoutForm() {
           productName: item.product.name,
           price: item.product.price,
           quantity: item.quantity,
-          selectedSize: item.selectedSize, // Correction ici
-          selectedColor: item.selectedColor, // Correction ici
+          selectedSize: item.selectedSize,
+          selectedColor: item.selectedColor,
         })),
         subtotal: totalPrice,
         shippingCost,
@@ -211,43 +211,186 @@ export function CheckoutForm() {
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
                       <Label htmlFor="postalCode" className="font-light">
-                        Code postal *
+                        Code postal (optionel)
                       </Label>
                       <Input
                         id="postalCode"
                         name="postalCode"
                         type="text"
-                        required
                         value={formData.postalCode}
                         onChange={handleInputChange}
                         className="mt-1"
                         placeholder="75001"
                       />
                     </div>
-                    <div>
-                      <Label htmlFor="city" className="font-light">
-                        Ville *
-                      </Label>
-                      <Input
-                        id="city"
-                        name="city"
-                        type="text"
-                        required
-                        value={formData.city}
-                        onChange={handleInputChange}
-                        className="mt-1"
-                        placeholder="Paris"
-                      />
-                    </div>
+                  <div>
+                    <Label htmlFor="city" className="font-light">
+                      Ville ou Gouvernorat *
+                    </Label>
+                    <select
+                      id="city"
+                      name="city"
+                      required
+                      value={formData.city}
+                      onChange={handleInputChange}
+                      className="mt-1 w-full p-2 border rounded-lg bg-background/80 font-light "
+                    >
+                      <option value="">Sélectionner une ville</option>
+                      <optgroup label="Tunis">
+                        <option value="Tunis">Tunis</option>
+                        <option value="La Marsa">La Marsa</option>
+                        <option value="Carthage">Carthage</option>
+                        <option value="Sidi Bou Saïd">Sidi Bou Saïd</option>
+                        <option value="Le Bardo">Le Bardo</option>
+                      </optgroup>
+                      <optgroup label="Ariana">
+                        <option value="Ariana">Ariana</option>
+                        <option value="La Soukra">La Soukra</option>
+                        <option value="Raoued">Raoued</option>
+                        <option value="Kalaat el-Andalous">Kalaat el-Andalous</option>
+                      </optgroup>
+                      <optgroup label="Ben Arous">
+                        <option value="Ben Arous">Ben Arous</option>
+                        <option value="Ezzahra">Ezzahra</option>
+                        <option value="Rades">Rades</option>
+                        <option value="Hammam Lif">Hammam Lif</option>
+                        <option value="Hammam Chatt">Hammam Chatt</option>
+                        <option value="Mégrine">Mégrine</option>
+                      </optgroup>
+                      <optgroup label="Manouba">
+                        <option value="Manouba">Manouba</option>
+                        <option value="Oued Ellil">Oued Ellil</option>
+                        <option value="Douar Hicher">Douar Hicher</option>
+                        <option value="Den Den">Den Den</option>
+                      </optgroup>
+                      <optgroup label="Nabeul">
+                        <option value="Nabeul">Nabeul</option>
+                        <option value="Hammamet">Hammamet</option>
+                        <option value="Kelibia">Kelibia</option>
+                        <option value="Korba">Korba</option>
+                        <option value="Menzel Temime">Menzel Temime</option>
+                        <option value="Dar Chaabane">Dar Chaabane</option>
+                      </optgroup>
+                      <optgroup label="Sousse">
+                        <option value="Sousse">Sousse</option>
+                        <option value="Hammam Sousse">Hammam Sousse</option>
+                        <option value="Akouda">Akouda</option>
+                        <option value="Msaken">Msaken</option>
+                        <option value="Enfidha">Enfidha</option>
+                      </optgroup>
+                      <optgroup label="Monastir">
+                        <option value="Monastir">Monastir</option>
+                        <option value="Ksar Hellal">Ksar Hellal</option>
+                        <option value="Sahline">Sahline</option>
+                        <option value="Jemmal">Jemmal</option>
+                        <option value="Sayada">Sayada</option>
+                      </optgroup>
+                      <optgroup label="Mahdia">
+                        <option value="Mahdia">Mahdia</option>
+                        <option value="Chebba">Chebba</option>
+                        <option value="El Jem">El Jem</option>
+                        <option value="Ksour Essef">Ksour Essef</option>
+                      </optgroup>
+                      <optgroup label="Sfax">
+                        <option value="Sfax">Sfax</option>
+                        <option value="Sakiet Ezzit">Sakiet Ezzit</option>
+                        <option value="Sakiet Eddaier">Sakiet Eddaier</option>
+                        <option value="Thyna">Thyna</option>
+                        <option value="Mahres">Mahres</option>
+                      </optgroup>
+                      <optgroup label="Kairouan">
+                        <option value="Kairouan">Kairouan</option>
+                        <option value="Haffouz">Haffouz</option>
+                        <option value="Nasrallah">Nasrallah</option>
+                        <option value="Sbikha">Sbikha</option>
+                      </optgroup>
+                      <optgroup label="Sidi Bouzid">
+                        <option value="Sidi Bouzid">Sidi Bouzid</option>
+                        <option value="Regueb">Regueb</option>
+                        <option value="Menzel Bouzaiane">Menzel Bouzaiane</option>
+                        <option value="Meknassy">Meknassy</option>
+                      </optgroup>
+                      <optgroup label="Kasserine">
+                        <option value="Kasserine">Kasserine</option>
+                        <option value="Feriana">Feriana</option>
+                        <option value="Thala">Thala</option>
+                        <option value="Sbeitla">Sbeitla</option>
+                      </optgroup>
+                      <optgroup label="Gafsa">
+                        <option value="Gafsa">Gafsa</option>
+                        <option value="Metlaoui">Metlaoui</option>
+                        <option value="Redeyef">Redeyef</option>
+                        <option value="El Ksar">El Ksar</option>
+                      </optgroup>
+                      <optgroup label="Tozeur">
+                        <option value="Tozeur">Tozeur</option>
+                        <option value="Nefta">Nefta</option>
+                        <option value="Degache">Degache</option>
+                      </optgroup>
+                      <optgroup label="Kébili">
+                        <option value="Kébili">Kébili</option>
+                        <option value="Douz">Douz</option>
+                        <option value="Souk Lahad">Souk Lahad</option>
+                      </optgroup>
+                      <optgroup label="Gabès">
+                        <option value="Gabès">Gabès</option>
+                        <option value="Mareth">Mareth</option>
+                        <option value="Métouia">Métouia</option>
+                        <option value="Ghannouch">Ghannouch</option>
+                      </optgroup>
+                      <optgroup label="Medenine">
+                        <option value="Medenine">Medenine</option>
+                        <option value="Zarzis">Zarzis</option>
+                        <option value="Ben Gardane">Ben Gardane</option>
+                        <option value="Houmt Souk (Djerba)">Houmt Souk (Djerba)</option>
+                      </optgroup>
+                      <optgroup label="Tataouine">
+                        <option value="Tataouine">Tataouine</option>
+                        <option value="Ghomrassen">Ghomrassen</option>
+                        <option value="Remada">Remada</option>
+                      </optgroup>
+                      <optgroup label="Bizerte">
+                        <option value="Bizerte">Bizerte</option>
+                        <option value="Mateur">Mateur</option>
+                        <option value="Menzel Bourguiba">Menzel Bourguiba</option>
+                        <option value="Ras Jebel">Ras Jebel</option>
+                      </optgroup>
+                      <optgroup label="Béja">
+                        <option value="Béja">Béja</option>
+                        <option value="Medjez el-Bab">Medjez el-Bab</option>
+                        <option value="Testour">Testour</option>
+                      </optgroup>
+                      <optgroup label="Jendouba">
+                        <option value="Jendouba">Jendouba</option>
+                        <option value="Tabarka">Tabarka</option>
+                        <option value="Ghardimaou">Ghardimaou</option>
+                      </optgroup>
+                      <optgroup label="Le Kef">
+                        <option value="Le Kef">Le Kef</option>
+                        <option value="Tajerouine">Tajerouine</option>
+                        <option value="Nebeur">Nebeur</option>
+                      </optgroup>
+                      <optgroup label="Siliana">
+                        <option value="Siliana">Siliana</option>
+                        <option value="Gaafour">Gaafour</option>
+                        <option value="Makthar">Makthar</option>
+                      </optgroup>
+                      <optgroup label="Zaghouan">
+                        <option value="Zaghouan">Zaghouan</option>
+                        <option value="El Fahs">El Fahs</option>
+                        <option value="Nadhour">Nadhour</option>
+                      </optgroup>
+
+                    </select>
+                  </div>
                     <div>
                       <Label htmlFor="country" className="font-light">
-                        Pays *
+                        Pays (optionel)
                       </Label>
                       <Input
                         id="country"
                         name="country"
                         type="text"
-                        required
                         value={formData.country}
                         onChange={handleInputChange}
                         className="mt-1"

@@ -98,7 +98,7 @@ export function CollectionProducts({ collectionSlug }: CollectionProductsProps) 
                     <p className="text-lg font-light text-accent">{product.price.toFixed(2)}€</p>
                   </div>
                   <p className="text-sm text-muted-foreground font-light mb-4 line-clamp-2">{product.description}</p>
-                  <Button variant="ghost" className="p-0 h-auto font-light text-accent hover:text-accent/80">
+                  <Button variant="ghost" className="p-0 h-auto font-light text-accent ">
                     Voir le produit →
                   </Button>
                 </div>
