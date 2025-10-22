@@ -168,7 +168,7 @@ export function ProductDetail({ product }: ProductDetailProps) {
 
             {/* Color Selection */}
             <div>
-              <h3 className="text-lg font-light mb-3">Couleur: {selectedColor}</h3>
+              <h3 className="text-lg font-light mb-3 ">Couleur: {selectedColor}</h3>
               <div className="flex gap-3">
                 {product.colors.map((color: { name: string; hex: string }) => (
                   <button
@@ -187,25 +187,40 @@ export function ProductDetail({ product }: ProductDetailProps) {
             </div>
 
             {/* Size Selection */}
-            <div>
-              <h3 className="text-lg font-light mb-3">Taille</h3>
-              <div className="grid grid-cols-5 gap-3">
-                {product.sizes.map((size: string) => (
-                  <button
-                    key={size}
-                    onClick={() => handleSizeSelect(size)}
-                    className={`py-3 rounded-lg border-2 transition-all font-light ${
-                      selectedSize === size
-                        ? "border-primary bg-primary text-primary-foreground"
-                        : "border-border hover:border-primary/50"
-                    } ${!isSizeInStock(size) ? "bg-gray-300 text-gray-500 cursor-not-allowed" : ""}`} // Rendu gris pour hors stock
-                    disabled={!isSizeInStock(size)}
-                  >
-                    {size}
-                  </button>
-                ))}
-              </div>
-            </div>
+ <div>
+  <h3 className="text-lg font-light mb-3">Taille</h3>
+  <div
+    className="
+      grid 
+      grid-cols-3 sm:grid-cols-4 md:grid-cols-5 
+      gap-2 sm:gap-3
+      max-w-sm
+    "
+  >
+    {product.sizes.map((size: string) => (
+      <button
+        key={size}
+        onClick={() => handleSizeSelect(size)}
+        disabled={!isSizeInStock(size)}
+        className={`
+          aspect-square 
+          w-12 sm:w-14 md:w-16
+          rounded-md border 
+          flex items-center justify-center 
+          text-sm sm:text-base font-light transition-all
+          ${selectedSize === size
+            ? "border-primary bg-primary text-primary-foreground"
+            : "border-border hover:border-primary/50"}
+          ${!isSizeInStock(size)
+            ? "bg-ring/50 text-gray-500 cursor-not-allowed"
+            : ""}
+        `}
+      >
+        {size}
+      </button>
+    ))}
+  </div>
+</div>
 
             {/* Quantity */}
             <div>
