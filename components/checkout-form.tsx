@@ -38,6 +38,30 @@ export function CheckoutForm() {
     })
   }
 
+  // Fonction pour envoyer l'email de confirmation
+  const handleOrderConfirmation = async (orderId: string) => {
+    try {
+      const response = await fetch('/api/send_mailing', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ commandeId: orderId }),
+      });
+
+      const result = await response.json();
+      
+      if (!response.ok) {
+        console.error('Erreur envoi email:', result.error);
+        // Continuer même si l'email échoue
+      } else {
+        console.log('Email envoyé:', result.message);
+      }
+    } catch (error) {
+      console.error('Erreur lors de l\'envoi de l\'email:', error);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsProcessing(true)
@@ -75,6 +99,9 @@ export function CheckoutForm() {
         throw new Error(data.error || "Échec de la création de la commande")
       }
 
+      // ENVOYER L'EMAIL DE CONFIRMATION
+      await handleOrderConfirmation(data.orderId);
+
       // Nettoyer le panier
       clearCart()
 
@@ -87,6 +114,9 @@ export function CheckoutForm() {
     }
   }
   /*if (items.length === 0) {
+=======
+  
+  if (items.length === 0) {
     return (
       <div className="pt-20 pb-16 min-h-[80vh] flex items-center justify-center">
         <div className="text-center max-w-md mx-auto px-4">
