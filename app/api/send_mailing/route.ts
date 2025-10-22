@@ -16,8 +16,8 @@ export async function POST(request: NextRequest) {
 
     // 1. Configuration MySQL
     const pool = mysql.createPool({
-      host: process.env.DB_HOST || "localhost",
-      user: process.env.DB_USER || "root", 
+      host: process.env.MYSQL_HOST || "localhost",
+      user: process.env.MYSQL_USER || "root", 
       password: process.env.DB_PASSWORD || "",
       database: "maktoub_db",
       connectionLimit: 10,
@@ -75,10 +75,10 @@ export async function POST(request: NextRequest) {
     const mailOptions = {
       from: process.env.SMTP_FROM || 'noreply@maktoub.com',
       to: order.email, // Email DYNAMIQUE du client
-      subject: `Confirmation de commande #${order.order_number} - Maktoub`,
+      subject: `Confirmation de commande Maktoub - #${order.order_number}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <div style="background: #f8f8f8; padding: 20px; text-align: center;">
+          <div style="background: #33726dff; padding: 20px; text-align: center;">
             <h1>Maktoub</h1>
             <p>Merci pour votre commande !</p>
           </div>
@@ -112,7 +112,7 @@ export async function POST(request: NextRequest) {
             <p><strong>Statut :</strong> ${order.status}</p>
             <p>Nous vous tiendrons informé de l'avancement.</p>
           </div>
-          <div style="background: #f8f8f8; padding: 20px; text-align: center; font-size: 12px; color: #666;">
+          <div style="background: #33726dff; padding: 20px; text-align: center; font-size: 12px; color: #666;">
             <p>© 2024 Maktoub. Tous droits réservés.</p>
           </div>
         </div>
