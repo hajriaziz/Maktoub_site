@@ -60,16 +60,16 @@ return (
         />
         <div className="absolute inset-0 bg-background/60" />
       </div>
-      <Card className="w-full max-w-md p-6 space-y-6 relative z-10">
+      <Card className="w-full max-w-md p-6 space-y-2 relative z-10 border-accent">
         {/* Logo centré en haut */}
-        <div className="flex justify-center mb-4">
+        <div className="flex justify-center mb-1">
           <img
             src="/Maktoub Logo Symbol - Color.png" // Remplace par le chemin de ton logo
             alt="Logo Maktoub"
             className="h-16 w-auto"
           />
         </div>
-        <h1 className="text-2xl font-serif font-bold text-center text-black">Connexion Admin</h1>
+        <h1 className="text-4xl font-sans font-normal text-center text-black">Connexion Admin</h1>
         {error && <p className="text-red-200 text-center">{error}</p>}
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
@@ -94,7 +94,7 @@ return (
               className="bg-white/90"
             />
           </div>
-          <Button type="submit" className="w-full bg-black text-white hover:bg-gray-200">
+          <Button type="submit" className="w-full bg-black text-white hover:bg-accent">
             Se connecter
           </Button>
         </form>

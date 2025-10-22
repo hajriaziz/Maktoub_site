@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import Link from "next/link"
+import { Edit } from "lucide-react"
 
 // Définition des interfaces pour typer les données
 interface Item {
@@ -112,28 +114,40 @@ export function AdminOrders() {
   return (
     <div className="pt-20 pb-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 className="text-4xl font-serif font-bold mb-8">Gestion des commandes</h1>
-
+        <h1 className="text-4xl font-sans font-normal mb-8">Gestion des commandes</h1>
         {/* Search */}
         <Card className="p-6 mb-8">
-          <div className="flex gap-4">
-            <div className="flex-1">
-              <Label htmlFor="orderNumber">Rechercher par numéro de commande</Label>
-              <Input
-                id="orderNumber"
-                type="text"
-                placeholder="Ex: MKT-1634567890123"
-                value={searchOrderNumber}
-                onChange={(e) => setSearchOrderNumber(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && searchOrders()}
-              />
+          <div className="space-y-6">
+            {/* Section de recherche */}
+            <div className="flex items-center gap-4">
+              <div className="flex-1">
+                  <h6 className="mb-2">Rechercher par numéro de commande</h6>
+                    <Label htmlFor="orderNumber"></Label>
+                      <Input
+                        id="orderNumber"
+                        type="text"
+                        placeholder="Ex: MKT-1634567890123"
+                        value={searchOrderNumber}
+                        onChange={(e) => setSearchOrderNumber(e.target.value)}
+                        onKeyDown={(e) => e.key === "Enter" && searchOrders()}
+                        />
+                  </div>
+                  <Button onClick={searchOrders} disabled={loading} className="mt-auto">
+                        {loading ? "Recherche..." : "Rechercher"}
+                  </Button>
             </div>
-            <Button onClick={searchOrders} disabled={loading} className="mt-auto">
-              {loading ? "Recherche..." : "Rechercher"}
-            </Button>
+
+            {/* Lien de retour */}
+            <div className="flex justify-end">
+              <Link href="/admin/dashboard">
+                <Button variant="outline" size="lg" className="font-medium">
+                  <Edit className="h-5 w-5 mr-2" />
+                  Retour au Dashboard
+                </Button>
+              </Link>
+            </div>
           </div>
         </Card>
-
         {/* Orders List */}
         <div className="space-y-4">
           {orders.length === 0 ? (
@@ -162,7 +176,7 @@ export function AdminOrders() {
                         })}
                       </p>
                     </div>
-                    <Badge variant={order.status === "pending" ? "secondary" : "default"}>{order.status}</Badge>
+                    <Badge variant={order.status === "pending" ? "secondary" : "default"} className="bg-chart-1">{order.status}</Badge>
                   </div>
 
                   {/* Customer Info */}

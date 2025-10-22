@@ -29,16 +29,28 @@ export function CollectionProducts({ collectionSlug }: CollectionProductsProps) 
         const res = await fetch(url)
         const data = await res.json()
 
+        console.log("[v0] API Response:", data) // Ajout pour débogage
+
         setProducts(data.products || [])
 
-        // Set collection name
+        // Set collection name based on API response
         if (collectionSlug === "all") {
           setCollectionName("Toutes les Collections")
-        } else if (data.products.length > 0 && data.products[0].category) {
-          setCollectionName(data.products[0].category.name)
+        } else if (data.products.length > 0) {
+          // Vérifie différentes structures possibles de la réponse
+          if (data.products[0].category && typeof data.products[0].category === "object" && data.products[0].category.name) {
+            setCollectionName(data.products[0].category.name)
+          } else if (data.products[0].category) {
+            setCollectionName(data.products[0].category.toString()) // Fallback si category est un ID ou une chaîne
+          } else {
+            setCollectionName(collectionSlug.charAt(0).toUpperCase() + collectionSlug.slice(1)) // Fallback avec slug formaté
+          }
+        } else {
+          setCollectionName("Collection Non Trouvée") // Fallback si pas de produits
         }
       } catch (error) {
         console.error("[v0] Error fetching products:", error)
+        setCollectionName("Erreur de Chargement")
       } finally {
         setLoading(false)
       }
@@ -62,7 +74,7 @@ export function CollectionProducts({ collectionSlug }: CollectionProductsProps) 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-5xl font-serif font-bold mb-4">{collectionName}</h1>
+          <h1 className="text-4xl font-light font-bold text-ring mb-4"> {collectionName}</h1>
           <p className="text-lg text-muted-foreground font-light">
             {products.length} produit{products.length > 1 ? "s" : ""}
           </p>
@@ -81,10 +93,10 @@ export function CollectionProducts({ collectionSlug }: CollectionProductsProps) 
                   />
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
                   {product.featured && (
-                    <Badge className="absolute top-4 left-4 bg-accent text-accent-foreground">Nouveauté</Badge>
+                    <Badge className="absolute top-4 left-4 bg-chart-1 text-accent-foreground">Nouveauté</Badge>
                   )}
                   {!product.inStock && (
-                    <Badge variant="secondary" className="absolute top-4 left-4">
+                    <Badge variant="secondary" className="text-accent-foreground bg-accent absolute top-4 left-4">
                       Rupture de stock
                     </Badge>
                   )}

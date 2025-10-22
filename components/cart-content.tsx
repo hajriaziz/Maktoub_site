@@ -17,7 +17,7 @@ export function CartContent() {
       <div className="pt-20 pb-16 min-h-[80vh] flex items-center justify-center">
         <div className="text-center max-w-md mx-auto px-4">
           <ShoppingBag className="h-24 w-24 mx-auto mb-6 text-muted-foreground" />
-          <h1 className="text-3xl font-serif font-bold mb-4">Votre panier est vide</h1>
+          <h1 className="text-3xl font-sans font-medium mb-4">Votre panier est vide</h1>
           <p className="text-muted-foreground font-light mb-8">
             Découvrez nos collections et ajoutez des produits à votre panier.
           </p>
@@ -37,8 +37,8 @@ export function CartContent() {
   return (
     <div className="pt-20 pb-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 className="text-4xl font-serif font-bold mb-8">
-          Panier ({totalItems} article{totalItems > 1 ? "s" : ""})
+        <h1 className="text-4xl font-ligth  mb-8">
+          Mon look en attente ({totalItems}{totalItems > 1 ? "s" : ""})
         </h1>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -149,7 +149,7 @@ export function CartContent() {
           {/* 🧾 Résumé de commande */}
           <div className="lg:col-span-1">
             <Card className="p-6 sticky top-24">
-              <h2 className="text-2xl font-serif font-bold mb-6">Résumé</h2>
+              <h2 className="text-2xl font-sans font-medium mb-6">Résumé</h2>
 
               <div className="space-y-4 mb-6">
                 <div className="flex justify-between text-sm font-light">

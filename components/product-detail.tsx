@@ -113,8 +113,8 @@ export function ProductDetail({ product }: ProductDetailProps) {
                 className="w-full h-full object-cover"
               />
               {!hasAnySizeInStock() && (
-                <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
-                  <Badge variant="secondary" className="text-lg px-6 py-2">
+                <div className="absolute inset-0  flex items-center justify-center">
+                  <Badge variant="secondary" className="bg-chart-1 absolute top-4 left-4">
                     Sold Out
                   </Badge>
                 </div>
@@ -150,7 +150,7 @@ export function ProductDetail({ product }: ProductDetailProps) {
                   {product.category}
                 </Badge>
               )}
-              <h1 className="text-4xl font-serif font-bold mb-2">{product.name}</h1>
+              <h1 className="text-4xl font-sans font-normal mb-2">{product.name}</h1>
               <p className="text-3xl font-light text-accent">{product.price.toFixed(2)} €</p>
             </div>
 

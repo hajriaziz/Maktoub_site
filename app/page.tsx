@@ -25,31 +25,40 @@ export default function Home() {
   return (
     <main className="min-h-screen relative">
       {showVideo ? (
-        <div className="absolute inset-0 z-50 flex items-center justify-center ">
+        <div
+          className="absolute inset-0 z-50 flex items-center justify-center"
+          onClick={handleVideoClick} // Appliqué à la div principale pour détecter tout clic
+        >
           <video
             autoPlay
             muted
-            loop // Ajout pour boucler la vidéo
+            loop
             playsInline
             className="w-full h-full object-cover cursor-pointer"
-            onClick={handleVideoClick}
-            preload="auto" // Précharge la vidéo pour une meilleure qualité initiale
+            preload="auto"
           >
             <source src="/maktoub.mp4" type="video/mp4" />
             Votre navigateur ne supporte pas la vidéo.
           </video>
-          {/* Cadre avec texte */}
-          <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-50">
-            <div className="text-center text-white p-6 bg-black/70 rounded-lg max-w-md">
-              <h2 className="text-3xl font-serif font-bold mb-4">Bienvenue chez Maktoub</h2>
-              <p className="text-lg mb-4">Découvrez notre collection exclusive</p>
-              <p className="text-xl font-medium mb-6">Cliquer pour commencer</p>
-              <button
-                onClick={handleVideoClick}
-                className="bg-white text-black px-6 py-2 rounded-full hover:bg-gray-200"
-              >
-                Entrer
-              </button>
+          {/* Cadre avec texte centré et fond semi-transparent */}
+          <div className="absolute top-1/10 left-1/2 transform -translate-x-1/2 flex flex-col items-center z-20 text-center">
+            <div className="bg-accent/20 p-6 rounded-lg">
+              {/* Logo */}
+              <img
+                src="/Maktoub Logo Type - White.png"
+                alt="Logo Maktoub"
+                className="max-w-[120px] h-auto opacity-100 mx-auto"
+              />
+              {/* Localisation et heure */}
+              <div className="mt-4 text-white text-base">
+                Tunis, TN | Tuesday, October 21, 2025 at 02:24 PM GMT+1
+              </div>
+              {/* Texte principal */}
+              <div className="mt-4 text-white text-lg font-bold leading-snug">
+                Click to enter<br />
+                إنزل بش تدخل<br />
+                Cliquez pour entrer
+              </div>
             </div>
           </div>
         </div>

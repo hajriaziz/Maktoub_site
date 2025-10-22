@@ -8,7 +8,7 @@ import { CartProvider } from "@/contexts/cart-context"
 import "./globals.css"
 
 export const metadata: Metadata = {
-  title: "Maktoub - Mode Moderne & Streetwear de Luxe",
+  title: "MAKTOUB - مكتوب ",
   description:
     "Découvrez Maktoub, la marque de vêtements qui allie modernité, luxe et streetwear. Collections exclusives et design contemporain.",
   generator: "v0.app",

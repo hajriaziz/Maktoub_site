@@ -86,7 +86,7 @@ export function AdminDashboard() {
   return (
     <div className="pt-20 pb-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 className="text-4xl font-serif font-bold mb-8">Tableau de bord</h1>
+        <h1 className="text-4xl font-sans font-normal mb-8">Dashboard Admin</h1>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <Card className="p-6">
@@ -127,7 +127,7 @@ export function AdminDashboard() {
           </TabsList>
           <TabsContent value="orders" className="space-y-4">
             <Card className="p-6">
-              <h2 className="text-2xl font-serif font-bold mb-6">Commandes récentes</h2>
+              <h2 className="text-2xl font-serif font-light mb-6">Commandes récentes</h2>
               {orders.length === 0 ? (
                 <p className="text-muted-foreground text-center py-8">Aucune commande pour le moment</p>
               ) : (
@@ -143,7 +143,7 @@ export function AdminDashboard() {
                         </div>
                         <div className="text-right">
                           <p className="font-bold">{order.total_amount.toFixed(2)}€</p>
-                          <Badge variant={order.status === "pending" ? "secondary" : "default"}>{order.status}</Badge>
+                          <Badge variant={order.status === "pending" ? "destructive" : "default"} >{order.status}</Badge>
                         </div>
                       </div>
                       <div className="flex gap-2 mt-4">
@@ -173,7 +173,7 @@ export function AdminDashboard() {
           </TabsContent>
           <TabsContent value="products" className="space-y-4">
             <Card className="p-6">
-              <h2 className="text-2xl font-serif font-bold mb-6">Gestion des produits</h2>
+              <h2 className="text-2xl font-serif font-light mb-6">Gestion des produits</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
                 {products.map((product) => (
                   <div key={product.id} className="border rounded-lg p-4">
@@ -186,7 +186,7 @@ export function AdminDashboard() {
                     <p className="text-sm text-muted-foreground mb-2">{product.category?.name}</p>
                     <div className="flex items-center justify-between">
                       <p className="font-bold text-accent">{product.price.toFixed(2)}€</p>
-                      <Badge variant={product.inStock ? "default" : "secondary"}>
+                      <Badge variant={product.inStock ? "default" : "destructive"} >
                         {product.inStock ? "En stock" : "Rupture"}
                       </Badge>
                     </div>
@@ -205,7 +205,7 @@ export function AdminDashboard() {
           </TabsContent>
           <TabsContent value="stock" className="space-y-4">
             <Card className="p-6">
-              <h2 className="text-2xl font-serif font-bold mb-6">Gestion du stock</h2>
+              <h2 className="text-2xl font-serif font-light mb-6">Gestion du stock</h2>
               <div className="space-y-4">
                 {products.map((product) => (
                   <div key={product.id} className="border rounded-lg p-4">

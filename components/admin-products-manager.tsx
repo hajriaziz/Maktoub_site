@@ -207,8 +207,10 @@ export default function AdminProductsManager() {
 
   if (loading) {
     return (
-      <div className="min-h-screen pt-24 pb-16">
-        <div className="container mx-auto px-4">Chargement...</div>
+      <div className="pt-20 pb-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <p className="text-lg text-muted-foreground">Chargement du tableau de bord...</p>
+        </div>
       </div>
     )
   }
@@ -217,16 +219,16 @@ export default function AdminProductsManager() {
     <div className="min-h-screen pt-24 pb-16">
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-4xl font-serif font-bold">Gestion des Produits</h1>
+          <h1 className="text-4xl font-sans font-normal ">Gestion des Produits</h1>
           <div className="space-x-4">
             <Button onClick={() => setShowForm(!showForm)}>
               <Plus className="h-4 w-4 mr-2" />
               {showForm ? "Annuler" : "Ajouter un Produit"}
             </Button>
-            <Link href="/admin/">
+            <Link href="/admin/dashboard">
               <Button variant="outline" size="lg" className="font-medium">
                 <Edit className="h-5 w-5 mr-2" />
-                Retour au Tableau de Bord
+                Retour au Dashboard
               </Button>
             </Link>
           </div>

@@ -86,12 +86,11 @@ export function CheckoutForm() {
       setIsProcessing(false)
     }
   }
-
-  if (items.length === 0) {
+  /*if (items.length === 0) {
     return (
       <div className="pt-20 pb-16 min-h-[80vh] flex items-center justify-center">
         <div className="text-center max-w-md mx-auto px-4">
-          <h1 className="text-3xl font-serif font-bold mb-4">Votre panier est vide</h1>
+          <h1 className="text-3xl font-sans font-medium mb-4">Votre panier est vide</h1>
           <p className="text-muted-foreground font-light mb-8">Ajoutez des produits avant de passer commande</p>
           <Link href="/collections/all">
             <Button size="lg" className="font-light tracking-wide">
@@ -101,12 +100,11 @@ export function CheckoutForm() {
         </div>
       </div>
     )
-  }
-
+  }*/
   return (
     <div className="pt-20 pb-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 className="text-4xl font-serif font-bold mb-8">Finaliser la commande</h1>
+        <h1 className="text-center text-4xl font-sans font-medium  mb-8">Finaliser mon look</h1>
 
         {error && (
           <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
@@ -120,7 +118,7 @@ export function CheckoutForm() {
             <div className="lg:col-span-2 space-y-6">
               {/* Contact Information */}
               <Card className="p-6">
-                <h2 className="text-2xl font-serif font-bold mb-6">Informations de contact</h2>
+                <h2 className="text-2xl font-serif font-light mb-6">Informations de contact</h2>
                 <div className="space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
@@ -191,7 +189,7 @@ export function CheckoutForm() {
 
               {/* Shipping Address */}
               <Card className="p-6">
-                <h2 className="text-2xl font-serif font-bold mb-6">Adresse de livraison</h2>
+                <h2 className="text-2xl font-serif font-light mb-6">Adresse de livraison</h2>
                 <div className="space-y-4">
                   <div>
                     <Label htmlFor="address" className="font-light">
@@ -403,7 +401,7 @@ export function CheckoutForm() {
 
               {/* Payment Method */}
               <Card className="p-6">
-                <h2 className="text-2xl font-serif font-bold mb-6">Mode de paiement</h2>
+                <h2 className="text-2xl font-serif font-light mb-6">Mode de paiement</h2>
                 <div className="space-y-4">
                   <div className="flex items-center gap-3 p-4 border-2 border-primary rounded-lg bg-primary/5">
                     <input type="radio" id="payment" name="payment" checked readOnly className="h-4 w-4" />
@@ -421,7 +419,7 @@ export function CheckoutForm() {
             {/* === Résumé de commande === */}
             <div className="lg:col-span-1">
               <Card className="p-6 sticky top-24">
-                <h2 className="text-2xl font-serif font-bold mb-6">Récapitulatif</h2>
+                <h2 className="text-2xl font-sans font-medium mb-6">Récapitulatif</h2>
 
                 {/* Order Items */}
                 <div className="space-y-4 mb-6">

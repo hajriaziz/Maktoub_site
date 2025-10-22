@@ -50,8 +50,8 @@ export function CollectionsSection() {
 
   // Typage de categoryImages avec les clés possibles
   const categoryImages: Record<string, string> = {
-    "Homme": "/home-section.jpg",
-    "Femme": "/femme-section.jpg",
+    "Collection Homme": "/home-section.jpg",
+    "Collection Femme": "/femme-section.jpg",
     //"Enfant": "/images/collections/enfant.jpg",
     // Ajoute d'autres catégories ici
   }

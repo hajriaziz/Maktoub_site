@@ -4,7 +4,7 @@ import { type NextRequest, NextResponse } from "next/server"
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    console.log(JSON.stringify(body, null, 2)); // Ajout pour débogage
+    console.log(JSON.stringify(body, null, 2)) // Ajout pour débogage
     const { customerInfo, items, total } = body
 
     // Validation des champs requis
@@ -20,13 +20,13 @@ export async function POST(request: NextRequest) {
 
     // Validation des items
     for (const [index, item] of items.entries()) {
-      const missingFields = [];
-      if (!item.productId) missingFields.push("productId");
-      if (!item.productName) missingFields.push("productName");
-      if (item.quantity === undefined) missingFields.push("quantity");
-      if (item.price === undefined) missingFields.push("price");
-      if (!item.selectedSize) missingFields.push("selectedSize");
-      if (!item.selectedColor) missingFields.push("selectedColor");
+      const missingFields = []
+      if (!item.productId) missingFields.push("productId")
+      if (!item.productName) missingFields.push("productName")
+      if (item.quantity === undefined) missingFields.push("quantity")
+      if (item.price === undefined) missingFields.push("price")
+      if (!item.selectedSize) missingFields.push("selectedSize")
+      if (!item.selectedColor) missingFields.push("selectedColor")
       if (missingFields.length > 0) {
         return Response.json({ success: false, error: `Missing required fields in item ${index}: ${missingFields.join(", ")}` }, { status: 400 })
       }
@@ -36,25 +36,15 @@ export async function POST(request: NextRequest) {
     }
 
     const result = await transaction(async (connection) => {
-      // 1. Créer ou récupérer le client
-      const [existingCustomers] = await connection.execute("SELECT id FROM customers WHERE email = ?", [
-        customerInfo.email,
-      ])
+      // 1. Créer un nouveau client, même si l'email existe déjà
+      const customerId = generateUUID()
+      await connection.execute(
+        `INSERT INTO customers (id, first_name, last_name, email, phone)
+         VALUES (?, ?, ?, ?, ?)`,
+        [customerId, customerInfo.firstName, customerInfo.lastName, customerInfo.email, customerInfo.phone || null],
+      )
 
-      let customerId: string
-
-      if ((existingCustomers as any[]).length > 0) {
-        customerId = (existingCustomers as any[])[0].id
-      } else {
-        customerId = generateUUID()
-        await connection.execute(
-          `INSERT INTO customers (id, first_name, last_name, email, phone)
-           VALUES (?, ?, ?, ?, ?)`,
-          [customerId, customerInfo.firstName, customerInfo.lastName, customerInfo.email, customerInfo.phone || null],
-        )
-      }
-
-      // 2. Créer l'adresse
+      // 2. Créer une nouvelle adresse
       const addressId = generateUUID()
       await connection.execute(
         `INSERT INTO addresses (id, customer_id, address_line, city, postal_code, country)
@@ -64,8 +54,8 @@ export async function POST(request: NextRequest) {
           customerId,
           customerInfo.address,
           customerInfo.city,
-          customerInfo.postalCode || null, // Optionnel
-          customerInfo.country || "France", // Optionnel, défaut France
+          customerInfo.postalCode || null,
+          customerInfo.country || "France",
         ],
       )
 
