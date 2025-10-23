@@ -16,14 +16,17 @@ export function Navigation() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo and Brand Name */}
-          <Link href="/" className="flex-shrink-0 flex items-center gap-2">
-          <h1 className="text-2xl font-light tracking-wide text-foreground">MAKTOUB</h1>
-            <img
-              src="/Maktoub Logo Horizontal - Black.png" // Remplace par le chemin de ton logo (ex: /logo.svg)
-              alt="Maktoub Logo"
-              className="h-15 w-auto" // Ajuste la hauteur selon tes besoins
-            />
-          </Link>
+<Link href="/" className="flex-shrink-0 flex items-center gap-3">
+  <div className="flex items-baseline gap-3">
+    <h1 className="text-2xl font-medium text-green-900 tracking-wide">
+      MAKTOUB
+    </h1>
+    <span className="text-green-900/40">|</span>
+    <p className="text-2xl font-medium text-green-900 tracking-normal">
+      مكتوب
+    </p>
+  </div>
+</Link>
           {/* Desktop Navigation */}
           <div className="hidden md:block">
             <div className="ml-10 flex items-baseline space-x-8">
