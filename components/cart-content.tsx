@@ -38,7 +38,7 @@ export function CartContent() {
     <div className="pt-20 pb-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <h1 className="text-4xl font-ligth  mb-8">
-          Mon look en attente ({totalItems}{totalItems > 1 ? "s" : ""})
+          Mon look en attente ({totalItems})
         </h1>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -131,7 +131,7 @@ export function CartContent() {
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="text-destructive hover:text-destructive/80"
+                        className="hover:bg-destructive text-destructive hover:text-white"
                         onClick={() =>
                           removeItem(item.product.id, item.selectedSize, item.selectedColor)
                         }

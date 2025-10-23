@@ -84,7 +84,7 @@ export function CollectionProducts({ collectionSlug }: CollectionProductsProps) 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {products.map((product) => (
             <Link key={product.id} href={`/products/${product.slug}`}>
-              <Card className="group overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer">
+              <Card className="group overflow-hidden border-0 shadow-lg hover:shadow-xl hover:bg-accent/20 transition-all duration-300 cursor-pointer">
                 <div className="relative overflow-hidden">
                   <img
                     src={product.images[0] || "/placeholder.svg"}

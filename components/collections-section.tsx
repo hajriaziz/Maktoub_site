@@ -72,7 +72,7 @@ export function CollectionsSection() {
             {categories.map((category) => (
               <Card
                 key={category.id}
-                className="group overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
+                className="group overflow-hidden border-0 shadow-lg hover:shadow-xl hover:bg-accent/20 transition-all duration-300 cursor-pointer"
               >
                 <div className="relative overflow-hidden">
                   <img

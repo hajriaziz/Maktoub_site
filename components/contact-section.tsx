@@ -103,7 +103,7 @@ export function ContactSection() {
             </div>
 
             {/* Newsletter */}
-            <Card className="p-6 bg-accent/5 border-accent/20">
+            <Card className="p-6 bg-accent/5 border-accent/20 ">
               <h4 className="text-xl font-light mb-4 text-foreground">Newsletter Maktoub</h4>
               <p className="text-muted-foreground font-light mb-4 text-pretty">
                 Soyez les premiers informés de nos nouvelles collections et événements exclusifs.

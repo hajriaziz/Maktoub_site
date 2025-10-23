@@ -57,17 +57,17 @@ export function Navigation() {
           {/* Right side */}
           <div className="hidden md:flex items-center space-x-4">
             <Link href="/cart">
-              <Button variant="ghost" size="sm" className="text-foreground relative">
-                <ShoppingBag className="h-5 w-5" />
+              <Button variant="ghost" size="sm" className="text-foreground relative cursor-pointer">
+                <ShoppingBag className="h-5 w-5  hover:text-white " />
                 {totalItems > 0 && (
-                  <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs bg-accent">
+                  <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs bg-chart-2 ">
                     {totalItems}
                   </Badge>
                 )}
               </Button>
             </Link>
             <Link href="/collections/all">
-              <Button variant="outline" size="sm" className="font-light tracking-wide bg-transparent">
+              <Button variant="outline" size="sm" className="font-light tracking-wide bg-transparent cursor-pointer">
                 Shop
               </Button>
             </Link>

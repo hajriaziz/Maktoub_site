@@ -2,6 +2,7 @@ import { notFound } from "next/navigation"
 import { Navigation } from "@/components/navigation"
 import { Footer } from "@/components/footer"
 import { ProductDetail } from "@/components/product-detail"
+import { Toaster } from "@/components/ui/toaster"
 
 async function getProduct(slug: string) {
   try {

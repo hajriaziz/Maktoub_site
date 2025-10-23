@@ -8,6 +8,13 @@ import { Separator } from "@/components/ui/separator"
 import { Minus, Plus, ShoppingBag, Heart, Share2 } from "lucide-react"
 import { useCart } from "@/contexts/cart-context"
 import { useRouter } from "next/navigation"
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog" // Assure-toi d'avoir ce composant
 
 interface ProductDetailProps {
   product: {
@@ -35,6 +42,7 @@ export function ProductDetail({ product }: ProductDetailProps) {
   const [selectedSize, setSelectedSize] = useState<string>("")
   const [selectedColor, setSelectedColor] = useState<string>(product.colors[0]?.name || "")
   const [quantity, setQuantity] = useState(1)
+  const [showCartPopup, setShowCartPopup] = useState(false) // Nouvel état pour le popup
   const { addItem } = useCart()
   const router = useRouter()
 
@@ -92,11 +100,18 @@ export function ProductDetail({ product }: ProductDetailProps) {
       selectedColor,
     })
 
-    // Show success message and redirect to cart
-    const goToCart = confirm(`${product.name} ajouté au panier!\n\nVoulez-vous voir votre panier?`)
-    if (goToCart) {
-      router.push("/cart")
-    }
+    // Afficher le popup au lieu de confirm
+    setShowCartPopup(true)
+  }
+
+  const handleViewCart = () => {
+    setShowCartPopup(false)
+    router.push("/cart")
+  }
+
+  const handleContinueShopping = () => {
+    setShowCartPopup(false)
+    router.push("/collections/all")
   }
 
   return (
@@ -113,7 +128,7 @@ export function ProductDetail({ product }: ProductDetailProps) {
                 className="w-full h-full object-cover"
               />
               {!hasAnySizeInStock() && (
-                <div className="absolute inset-0  flex items-center justify-center">
+                <div className="absolute inset-0 flex items-center justify-center">
                   <Badge variant="secondary" className="bg-chart-1 absolute top-4 left-4">
                     Sold Out
                   </Badge>
@@ -146,7 +161,7 @@ export function ProductDetail({ product }: ProductDetailProps) {
             {/* Header */}
             <div>
               {product.category && (
-                <Badge variant="outline" className="mb-3">
+                <Badge variant="outline" className="bg-chart-2 text-white mb-3">
                   {product.category}
                 </Badge>
               )}
@@ -168,7 +183,7 @@ export function ProductDetail({ product }: ProductDetailProps) {
 
             {/* Color Selection */}
             <div>
-              <h3 className="text-lg font-light mb-3 ">Couleur: {selectedColor}</h3>
+              <h3 className="text-lg font-light mb-3">Couleur: {selectedColor}</h3>
               <div className="flex gap-3">
                 {product.colors.map((color: { name: string; hex: string }) => (
                   <button
@@ -187,40 +202,32 @@ export function ProductDetail({ product }: ProductDetailProps) {
             </div>
 
             {/* Size Selection */}
- <div>
-  <h3 className="text-lg font-light mb-3">Taille</h3>
-  <div
-    className="
-      grid 
-      grid-cols-3 sm:grid-cols-4 md:grid-cols-5 
-      gap-2 sm:gap-3
-      max-w-sm
-    "
-  >
-    {product.sizes.map((size: string) => (
-      <button
-        key={size}
-        onClick={() => handleSizeSelect(size)}
-        disabled={!isSizeInStock(size)}
-        className={`
-          aspect-square 
-          w-12 sm:w-14 md:w-16
-          rounded-md border 
-          flex items-center justify-center 
-          text-sm sm:text-base font-light transition-all
-          ${selectedSize === size
-            ? "border-primary bg-primary text-primary-foreground"
-            : "border-border hover:border-primary/50"}
-          ${!isSizeInStock(size)
-            ? "bg-ring/50 text-gray-500 cursor-not-allowed"
-            : ""}
-        `}
-      >
-        {size}
-      </button>
-    ))}
-  </div>
-</div>
+            <div>
+              <h3 className="text-lg font-light mb-3">Taille</h3>
+              <div className="flex flex-wrap gap-2 sm:gap-3">
+                {product.sizes.map((size: string) => (
+                  <button
+                    key={size}
+                    onClick={() => handleSizeSelect(size)}
+                    disabled={!isSizeInStock(size)}
+                    className={`
+                      w-12 h-12 sm:w-14 sm:h-14
+                      rounded-md border 
+                      flex items-center justify-center 
+                      text-sm sm:text-base font-light transition-all
+                      ${selectedSize === size
+                        ? "border-primary bg-primary text-primary-foreground"
+                        : "border-border hover:border-primary/50"}
+                      ${!isSizeInStock(size)
+                        ? "bg-ring/40 text-white cursor-not-allowed"
+                        : ""}
+                    `}
+                  >
+                    {size}
+                  </button>
+                ))}
+              </div>
+            </div>
 
             {/* Quantity */}
             <div>
@@ -288,6 +295,44 @@ export function ProductDetail({ product }: ProductDetailProps) {
             </Card>
           </div>
         </div>
+
+        {/* Popup Modale */}
+        <Dialog open={showCartPopup} onOpenChange={setShowCartPopup} modal={true} >
+          <DialogContent className="sm:max-w-[425px]">
+<DialogHeader className="text-center">
+      <div className="mx-auto w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center mb-2">
+        <svg
+          className="w-6 h-6 text-accent"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M5 13l4 4L19 7"
+          />
+        </svg>
+      </div>
+      <DialogTitle className="text-2xl font-light text-foreground">Succès !</DialogTitle>
+    </DialogHeader>
+            <div className="py-1">
+              <p className="text-center text-accent font-light">
+                {product.name} a été ajouté au panier !
+              </p>
+            </div>
+            <DialogFooter>
+              <Button
+                onClick={handleViewCart}
+                className="w-full sm:w-auto font-light bg-primary text-primary-foreground hover:bg-primary/90"
+              >
+                Voir le panier
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   )
