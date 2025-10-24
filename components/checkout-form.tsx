@@ -25,7 +25,7 @@ export function CheckoutForm() {
     address: "",
     city: "",
     postalCode: "",
-    country: "France",
+    country: "",
   })
 
   const shippingCost = totalPrice >= 100 ? 0 : 9.99
@@ -113,24 +113,6 @@ export function CheckoutForm() {
       setIsProcessing(false)
     }
   }
-  /*if (items.length === 0) {
-=======
-  
-  if (items.length === 0) {
-    return (
-      <div className="pt-20 pb-16 min-h-[80vh] flex items-center justify-center">
-        <div className="text-center max-w-md mx-auto px-4">
-          <h1 className="text-3xl font-sans font-medium mb-4">Votre panier est vide</h1>
-          <p className="text-muted-foreground font-light mb-8">Ajoutez des produits avant de passer commande</p>
-          <Link href="/collections/all">
-            <Button size="lg" className="font-light tracking-wide">
-              Découvrir la boutique
-            </Button>
-          </Link>
-        </div>
-      </div>
-    )
-  }*/
   return (
     <div className="pt-20 pb-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -163,7 +145,7 @@ export function CheckoutForm() {
                         value={formData.firstName}
                         onChange={handleInputChange}
                         className="mt-1"
-                        placeholder="Jean"
+                        placeholder="foulen"
                       />
                     </div>
                     <div>
@@ -178,7 +160,7 @@ export function CheckoutForm() {
                         value={formData.lastName}
                         onChange={handleInputChange}
                         className="mt-1"
-                        placeholder="Dupont"
+                        placeholder="ben foulen"
                       />
                     </div>
                   </div>
@@ -195,7 +177,7 @@ export function CheckoutForm() {
                         value={formData.email}
                         onChange={handleInputChange}
                         className="mt-1"
-                        placeholder="jean.dupont@email.com"
+                        placeholder="foulen.benfoulen@email.com"
                       />
                     </div>
                     <div>
@@ -210,7 +192,7 @@ export function CheckoutForm() {
                         value={formData.phone}
                         onChange={handleInputChange}
                         className="mt-1"
-                        placeholder="+33 6 12 34 56 78"
+                        placeholder="+216 99 999 999"
                       />
                     </div>
                   </div>
@@ -233,7 +215,7 @@ export function CheckoutForm() {
                       value={formData.address}
                       onChange={handleInputChange}
                       className="mt-1"
-                      placeholder="123 Rue de la Mode"
+                      placeholder="12 nahj lhob "
                     />
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -248,7 +230,7 @@ export function CheckoutForm() {
                         value={formData.postalCode}
                         onChange={handleInputChange}
                         className="mt-1"
-                        placeholder="75001"
+                        placeholder="2050"
                       />
                     </div>
                   <div>
@@ -422,7 +404,7 @@ export function CheckoutForm() {
                         value={formData.country}
                         onChange={handleInputChange}
                         className="mt-1"
-                        placeholder="France"
+                        placeholder="Tunisie"
                       />
                     </div>
                   </div>

@@ -39,9 +39,11 @@ export default function AdminProductsManager() {
   const [categories, setCategories] = useState<Category[]>([])
   const [loading, setLoading] = useState(true)
   const [showForm, setShowForm] = useState(false)
+  const [showEditForm, setShowEditForm] = useState(false)
+  const [editProduct, setEditProduct] = useState<Product | null>(null)
   const router = useRouter()
 
-  // Form state
+  // Form state for creation
   const [formData, setFormData] = useState({
     name: "",
     slug: "",
@@ -53,6 +55,22 @@ export default function AdminProductsManager() {
     sizes: ["S", "M", "L", "XL"],
     stock: {} as Record<string, number>,
     colors: [{ name: "Noir", hex: "#000000" }],
+    featured: false,
+  })
+
+  // Form state for editing
+  const [editFormData, setEditFormData] = useState({
+    id: "",
+    name: "",
+    slug: "",
+    description: "",
+    longDescription: "",
+    price: "",
+    categoryId: "",
+    images: [] as File[],
+    sizes: [] as string[],
+    stock: {} as Record<string, number>,
+    colors: [] as { name: string; hex: string }[],
     featured: false,
   })
 
@@ -150,6 +168,76 @@ export default function AdminProductsManager() {
     }
   }
 
+  const handleEdit = (product: Product) => {
+    setEditProduct(product)
+    setEditFormData({
+      id: product.id,
+      name: product.name,
+      slug: product.slug,
+      description: product.description,
+      longDescription: product.longDescription,
+      price: product.price.toString(),
+      categoryId: product.categoryId,
+      images: [],
+      sizes: product.sizes,
+      stock: { ...product.stock },
+      colors: [...product.colors],
+      featured: product.featured,
+    })
+    setShowEditForm(true)
+  }
+
+const handleUpdate = async (e: React.FormEvent) => {
+  e.preventDefault()
+
+  // Synchroniser les tailles avec les clés de stock
+  const updatedStock = { ...editFormData.stock }
+  editFormData.sizes.forEach((size) => {
+    if (!updatedStock[size]) updatedStock[size] = 0
+  })
+  Object.keys(updatedStock).forEach((size) => {
+    if (!editFormData.sizes.includes(size)) delete updatedStock[size]
+  })
+
+  const formDataToSend = new FormData()
+  formDataToSend.append("id", editFormData.id)
+  formDataToSend.append("name", editFormData.name)
+  formDataToSend.append("slug", editFormData.slug)
+  formDataToSend.append("description", editFormData.description)
+  formDataToSend.append("longDescription", editFormData.longDescription)
+  formDataToSend.append("price", editFormData.price)
+  formDataToSend.append("categoryId", editFormData.categoryId)
+  formDataToSend.append("stock", JSON.stringify(updatedStock))
+  formDataToSend.append("sizes", JSON.stringify(editFormData.sizes))
+  formDataToSend.append("colors", JSON.stringify(editFormData.colors))
+  formDataToSend.append("featured", editFormData.featured.toString())
+
+  editFormData.images.forEach((image) => {
+    formDataToSend.append("images", image)
+  })
+
+  try {
+    const response = await fetch(`/api/admin/products/${editFormData.id}`, {
+      method: "PATCH",
+      body: formDataToSend,
+    })
+
+    const data = await response.json()
+
+    if (data.success) {
+      alert("Produit mis à jour avec succès!")
+      setShowEditForm(false)
+      setEditProduct(null)
+      fetchProducts()
+      router.refresh()
+    } else {
+      alert(`Erreur: ${data.error}`)
+    }
+  } catch (error) {
+    console.error("Error updating product:", error)
+    alert("Erreur lors de la mise à jour")
+  }
+}
   const resetForm = () => {
     setFormData({
       name: "",
@@ -203,6 +291,45 @@ export default function AdminProductsManager() {
       ...prev,
       stock: { ...prev.stock, [size]: Number(quantity) || 0 },
     }))
+  }
+
+  const updateEditStock = (size: string, quantity: string) => {
+    setEditFormData((prev) => ({
+      ...prev,
+      stock: { ...prev.stock, [size]: Number(quantity) || 0 },
+    }))
+  }
+
+  const addEditImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const newImages = Array.from(e.target.files)
+      setEditFormData((prev) => ({ ...prev, images: [...prev.images, ...newImages] }))
+    }
+  }
+
+  const removeEditImage = (index: number) => {
+    setEditFormData((prev) => ({
+      ...prev,
+      images: prev.images.filter((_, i) => i !== index),
+    }))
+  }
+
+  const addEditColor = () => {
+    setEditFormData({
+      ...editFormData,
+      colors: [...editFormData.colors, { name: "", hex: "#000000" }],
+    })
+  }
+
+  const updateEditColor = (index: number, field: "name" | "hex", value: string) => {
+    const newColors = [...editFormData.colors]
+    newColors[index][field] = value
+    setEditFormData({ ...editFormData, colors: newColors })
+  }
+
+  const removeEditColor = (index: number) => {
+    const newColors = editFormData.colors.filter((_, i) => i !== index)
+    setEditFormData({ ...editFormData, colors: newColors })
   }
 
   if (loading) {
@@ -264,7 +391,7 @@ export default function AdminProductsManager() {
                   </div>
 
                   <div>
-                    <Label htmlFor="price">Prix (€) *</Label>
+                    <Label htmlFor="price">Prix (TND) *</Label>
                     <Input
                       id="price"
                       type="number"
@@ -362,62 +489,62 @@ export default function AdminProductsManager() {
                 </div>
 
                 <div>
-                  <Label>Tailles disponibles et Stock</Label>
-                  {formData.sizes.map((size, index) => (
-                    <div key={index} className="flex gap-2 mb-2">
-                      <Input
-                        value={size}
-                        onChange={(e) =>
-                          setFormData((prev) => {
-                            const newSizes = [...prev.sizes]
-                            newSizes[index] = e.target.value
-                            return { ...prev, sizes: newSizes }
-                          })
-                        }
-                        placeholder="Taille (ex: S)"
-                      />
-                      <Input
-                        type="number"
-                        value={formData.stock[size] || ""}
-                        onChange={(e) => updateStock(size, e.target.value)}
-                        placeholder="Quantité"
-                        min="0"
-                      />
-                      {formData.sizes.length > 1 && (
-                        <Button
-                          type="button"
-                          variant="outline"
-                          size="icon"
-                          onClick={() => {
-                            setFormData((prev) => ({
-                              ...prev,
-                              sizes: prev.sizes.filter((_, i) => i !== index),
-                              stock: Object.fromEntries(
-                                Object.entries(prev.stock).filter(([s]) => s !== size)
-                              ),
-                            }))
-                          }}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      )}
-                    </div>
-                  ))}
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={() =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        sizes: [...prev.sizes, ""],
-                      }))
-                    }
-                  >
-                    <Plus className="h-4 w-4 mr-2" />
-                    Ajouter une taille
-                  </Button>
-                </div>
+  <Label>Tailles disponibles et Stock</Label>
+  {editFormData.sizes.map((size, index) => (
+    <div key={index} className="flex gap-2 mb-2">
+      <Input
+        value={size}
+        onChange={(e) =>
+          setEditFormData((prev) => {
+            const newSizes = [...prev.sizes]
+            newSizes[index] = e.target.value
+            return { ...prev, sizes: newSizes }
+          })
+        }
+        placeholder="Taille (ex: S)"
+      />
+      <Input
+        type="number"
+        value={editFormData.stock[size] || ""}
+        onChange={(e) => updateEditStock(size, e.target.value)}
+        placeholder="Quantité"
+        min="0"
+      />
+      {editFormData.sizes.length > 1 && (
+        <Button
+          type="button"
+          variant="outline"
+          size="icon"
+          onClick={() => {
+            setEditFormData((prev) => ({
+              ...prev,
+              sizes: prev.sizes.filter((_, i) => i !== index),
+              stock: Object.fromEntries(
+                Object.entries(prev.stock).filter(([s]) => s !== size)
+              ),
+            }))
+          }}
+        >
+          <Trash2 className="h-4 w-4" />
+        </Button>
+      )}
+    </div>
+  ))}
+  <Button
+    type="button"
+    variant="outline"
+    size="sm"
+    onClick={() =>
+      setEditFormData((prev) => ({
+        ...prev,
+        sizes: [...prev.sizes, ""],
+      }))
+    }
+  >
+    <Plus className="h-4 w-4 mr-2" />
+    Ajouter une taille
+  </Button>
+</div>
 
                 <div>
                   <Label>Couleurs</Label>
@@ -465,6 +592,253 @@ export default function AdminProductsManager() {
           </Card>
         )}
 
+        {showEditForm && editProduct && (
+          <Card className="mb-8">
+            <CardHeader>
+              <CardTitle>Modifier le Produit: {editProduct.name}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleUpdate} className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="edit-name">Nom du produit *</Label>
+                    <Input
+                      id="edit-name"
+                      value={editFormData.name}
+                      onChange={(e) => setEditFormData({ ...editFormData, name: e.target.value })}
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="edit-slug">Slug (URL) *</Label>
+                    <Input
+                      id="edit-slug"
+                      value={editFormData.slug}
+                      onChange={(e) => setEditFormData({ ...editFormData, slug: e.target.value })}
+                      placeholder="hoodie-noir-homme"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="edit-price">Prix (TND) *</Label>
+                    <Input
+                      id="edit-price"
+                      type="number"
+                      step="0.01"
+                      value={editFormData.price}
+                      onChange={(e) => setEditFormData({ ...editFormData, price: e.target.value })}
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="edit-category">Catégorie *</Label>
+                    <Select
+                      value={editFormData.categoryId}
+                      onValueChange={(value) => setEditFormData({ ...editFormData, categoryId: value })}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Sélectionner une catégorie" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {categories.map((cat) => (
+                          <SelectItem key={cat.id} value={cat.id}>
+                            {cat.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                <div>
+                  <Label htmlFor="edit-description">Description courte</Label>
+                  <Textarea
+                    id="edit-description"
+                    value={editFormData.description}
+                    onChange={(e) => setEditFormData({ ...editFormData, description: e.target.value })}
+                    rows={2}
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="edit-longDescription">Description détaillée</Label>
+                  <Textarea
+                    id="edit-longDescription"
+                    value={editFormData.longDescription}
+                    onChange={(e) => setEditFormData({ ...editFormData, longDescription: e.target.value })}
+                    rows={4}
+                  />
+                </div>
+
+                <div>
+                  <Label className="block mb-2">Images du Produit</Label>
+                  <div className="flex items-center gap-4 mb-4">
+                    <label
+                      htmlFor="edit-image-upload"
+                      className="flex items-center justify-center w-40 h-12 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors cursor-pointer"
+                    >
+                      <Upload className="h-5 w-5 mr-2" />
+                      Ajouter des Images
+                    </label>
+                    <input
+                      id="edit-image-upload"
+                      type="file"
+                      accept="image/*"
+                      multiple
+                      onChange={addEditImage}
+                      className="hidden"
+                    />
+                  </div>
+                  {editFormData.images.length > 0 && (
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                      {editFormData.images.map((image, index) => (
+                        <div
+                          key={index}
+                          className="relative bg-muted rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-200"
+                        >
+                          <img
+                            src={URL.createObjectURL(image)}
+                            alt={`Aperçu ${index + 1}`}
+                            className="w-full h-32 object-cover"
+                          />
+                          <Button
+                            type="button"
+                            variant="destructive"
+                            size="icon"
+                            className="absolute top-2 right-2 h-6 w-6"
+                            onClick={() => removeEditImage(index)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  {editProduct.images.length > 0 && (
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-4">
+                      {editProduct.images.map((image, index) => (
+                        <div
+                          key={index}
+                          className="relative bg-muted rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-200"
+                        >
+                          <img
+                            src={image}
+                            alt={`Image existante ${index + 1}`}
+                            className="w-full h-32 object-cover"
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                <div>
+                  <Label>Tailles disponibles et Stock</Label>
+                  {editFormData.sizes.map((size, index) => (
+                    <div key={index} className="flex gap-2 mb-2">
+                      <Input
+                        value={size}
+                        onChange={(e) =>
+                          setEditFormData((prev) => {
+                            const newSizes = [...prev.sizes]
+                            newSizes[index] = e.target.value
+                            return { ...prev, sizes: newSizes }
+                          })
+                        }
+                        placeholder="Taille (ex: S)"
+                      />
+                      <Input
+                        type="number"
+                        value={editFormData.stock[size] || ""}
+                        onChange={(e) => updateEditStock(size, e.target.value)}
+                        placeholder="Quantité"
+                        min="0"
+                      />
+                      {editFormData.sizes.length > 1 && (
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="icon"
+                          onClick={() => {
+                            setEditFormData((prev) => ({
+                              ...prev,
+                              sizes: prev.sizes.filter((_, i) => i !== index),
+                              stock: Object.fromEntries(
+                                Object.entries(prev.stock).filter(([s]) => s !== size)
+                              ),
+                            }))
+                          }}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      )}
+                    </div>
+                  ))}
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() =>
+                      setEditFormData((prev) => ({
+                        ...prev,
+                        sizes: [...prev.sizes, ""],
+                      }))
+                    }
+                  >
+                    <Plus className="h-4 w-4 mr-2" />
+                    Ajouter une taille
+                  </Button>
+                </div>
+
+                <div>
+                  <Label>Couleurs</Label>
+                  {editFormData.colors.map((color, index) => (
+                    <div key={index} className="flex gap-2 mb-2">
+                      <Input
+                        value={color.name}
+                        onChange={(e) => updateEditColor(index, "name", e.target.value)}
+                        placeholder="Nom de la couleur"
+                      />
+                      <Input
+                        type="color"
+                        value={color.hex}
+                        onChange={(e) => updateEditColor(index, "hex", e.target.value)}
+                        className="w-20"
+                      />
+                      {editFormData.colors.length > 1 && (
+                        <Button type="button" variant="outline" size="icon" onClick={() => removeEditColor(index)}>
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      )}
+                    </div>
+                  ))}
+                  <Button type="button" variant="outline" size="sm" onClick={addEditColor}>
+                    <Plus className="h-4 w-4 mr-2" />
+                    Ajouter une couleur
+                  </Button>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    id="edit-featured"
+                    checked={editFormData.featured}
+                    onChange={(e) => setEditFormData({ ...editFormData, featured: e.target.checked })}
+                  />
+                  <Label htmlFor="edit-featured">Produit mis en avant</Label>
+                </div>
+
+                <Button type="submit" size="lg" className="w-full">
+                  Mettre à jour le Produit
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
+        )}
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {products.map((product) => (
             <Card key={product.id}>
@@ -480,10 +854,15 @@ export default function AdminProductsManager() {
                 </div>
                 <h3 className="font-semibold mb-1">{product.name}</h3>
                 <p className="text-sm text-muted-foreground mb-2">{product.categoryName}</p>
-                <p className="font-bold mb-2">{product.price.toFixed(2)} €</p>
+                <p className="font-bold mb-2">{product.price.toFixed(2)} TND</p>
                 <p className="text-sm mb-2">Tailles: {product.sizes.join(", ")}</p>
                 <div className="flex gap-2">
-                  <Button variant="outline" size="sm" className="flex-1 bg-transparent">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex-1 bg-transparent"
+                    onClick={() => handleEdit(product)}
+                  >
                     <Edit className="h-4 w-4 mr-1" />
                     Modifier
                   </Button>

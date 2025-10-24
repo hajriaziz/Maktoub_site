@@ -31,7 +31,7 @@ export function CartContent() {
     )
   }
 
-  const shippingCost = totalPrice >= 100 ? 0 : 9.99
+  const shippingCost = totalPrice >= 100 ? 0 : 8.00
   const finalTotal = totalPrice + shippingCost
 
   return (
@@ -75,7 +75,7 @@ export function CartContent() {
                         )}
                       </div>
                       <p className="text-lg font-light text-accent">
-                        {Number(item.product.price).toFixed(2)} €
+                        {Number(item.product.price).toFixed(2)} TND
                       </p>
                     </div>
 
@@ -154,17 +154,17 @@ export function CartContent() {
               <div className="space-y-4 mb-6">
                 <div className="flex justify-between text-sm font-light">
                   <span className="text-muted-foreground">Sous-total</span>
-                  <span>{totalPrice.toFixed(2)} €</span>
+                  <span>{totalPrice.toFixed(2)} TND</span>
                 </div>
 
                 <div className="flex justify-between text-sm font-light">
                   <span className="text-muted-foreground">Livraison</span>
-                  <span>{shippingCost === 0 ? "Gratuite" : `${shippingCost.toFixed(2)} €`}</span>
+                  <span>{shippingCost === 0 ? "Gratuite" : `${shippingCost.toFixed(2)} TND`}</span>
                 </div>
 
                 {totalPrice < 100 && (
                   <p className="text-xs text-muted-foreground font-light">
-                    Ajoutez {(100 - totalPrice).toFixed(2)} € pour la livraison gratuite
+                    Ajoutez {(100 - totalPrice).toFixed(2)} TND pour la livraison gratuite
                   </p>
                 )}
 
@@ -173,7 +173,7 @@ export function CartContent() {
                 <div className="flex justify-between text-lg font-light">
                   <span className="font-medium">Total</span>
                   <span className="font-medium text-accent">
-                    {finalTotal.toFixed(2)} €
+                    {finalTotal.toFixed(2)} TND
                   </span>
                 </div>
               </div>
@@ -201,7 +201,7 @@ export function CartContent() {
               <div className="space-y-3 text-sm text-muted-foreground font-light">
                 <div className="flex items-start gap-2">
                   <span>✓</span>
-                  <span>Livraison gratuite à partir de 100€</span>
+                  <span>Livraison gratuite à partir de 100TND</span>
                 </div>
                 <div className="flex items-start gap-2">
                   <span>✓</span>

@@ -210,7 +210,7 @@ export function AdminOrders() {
                           <span>
                             {item.product_name || "N/A"} ({item.size || "N/A"}, {item.color || "N/A"}) x{item.quantity || 0}
                           </span>
-                          <span className="font-medium">{(item.unit_price || 0).toFixed(2)}€</span>
+                          <span className="font-medium">{(item.unit_price || 0).toFixed(2)}TND</span>
                         </div>
                       ))}
                     </div>
@@ -220,15 +220,15 @@ export function AdminOrders() {
                   <div className="border-t pt-4 mb-4">
                     <div className="flex justify-between mb-1">
                       <span className="text-sm">Sous-total</span>
-                      <span className="text-sm">{(order.subtotal || 0).toFixed(2)}€</span> {/* Ajout de la vérification */}
+                      <span className="text-sm">{(order.subtotal || 0).toFixed(2)}TND</span> {/* Ajout de la vérification */}
                     </div>
                     <div className="flex justify-between mb-2">
                       <span className="text-sm">Livraison</span>
-                      <span className="text-sm">{(order.shipping_cost || 0).toFixed(2)}€</span> {/* Ajout de la vérification */}
+                      <span className="text-sm">{(order.shipping_cost || 0).toFixed(2)}TND</span> {/* Ajout de la vérification */}
                     </div>
                     <div className="flex justify-between font-bold text-lg">
                       <span>Total</span>
-                      <span className="text-accent">{(order.total || 0).toFixed(2)}€</span> {/* Ajout de la vérification */}
+                      <span className="text-accent">{(order.total || 0).toFixed(2)}TND</span> {/* Ajout de la vérification */}
                     </div>
                   </div>
 

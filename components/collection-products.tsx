@@ -84,7 +84,7 @@ export function CollectionProducts({ collectionSlug }: CollectionProductsProps) 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {products.map((product) => (
             <Link key={product.id} href={`/products/${product.slug}`}>
-              <Card className="group overflow-hidden border-0 shadow-lg hover:shadow-xl hover:bg-accent/20 transition-all duration-300 cursor-pointer">
+              <Card className="group overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer">
                 <div className="relative overflow-hidden">
                   <img
                     src={product.images[0] || "/placeholder.svg"}
@@ -107,10 +107,10 @@ export function CollectionProducts({ collectionSlug }: CollectionProductsProps) 
                     <h3 className="text-xl font-light text-foreground group-hover:text-accent transition-colors">
                       {product.name}
                     </h3>
-                    <p className="text-lg font-light text-accent">{product.price.toFixed(2)}€</p>
+                    <p className="text-lg font-light text-accent">{product.price.toFixed(2)} TND</p>
                   </div>
                   <p className="text-sm text-muted-foreground font-light mb-4 line-clamp-2">{product.description}</p>
-                  <Button variant="ghost" className="p-0 h-auto font-light text-accent cursor-pointer">
+                  <Button variant="ghost" className="p-0.5 h-auto font-light text-accent cursor-pointer">
                     Voir le produit →
                   </Button>
                 </div>

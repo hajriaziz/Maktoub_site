@@ -70,9 +70,10 @@ export function CollectionsSection() {
         <div className="flex justify-center">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl w-full">
             {categories.map((category) => (
+            <Link href={`/collections/${category.slug}`}>
               <Card
                 key={category.id}
-                className="group overflow-hidden border-0 shadow-lg hover:shadow-xl hover:bg-accent/20 transition-all duration-300 cursor-pointer"
+                className="group overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
               >
                 <div className="relative overflow-hidden">
                   <img
@@ -86,13 +87,13 @@ export function CollectionsSection() {
                 <div className="p-6">
                   <h3 className="text-xl font-light mb-3 text-foreground">{category.name}</h3>
                   <p className="text-muted-foreground font-light mb-4 text-pretty">{category.description}</p>
-                  <Link href={`/collections/${category.slug}`}>
-                    <Button variant="ghost" className="p-0 h-auto font-light text-accent cursor-pointer ">
+                    <Button variant="ghost" className="p-0.5 h-auto font-light text-accent cursor-pointer ">
                       Découvrir →
                     </Button>
-                  </Link>
+                  
                 </div>
               </Card>
+            </Link>
             ))}
           </div>
         </div>

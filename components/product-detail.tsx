@@ -161,12 +161,12 @@ export function ProductDetail({ product }: ProductDetailProps) {
             {/* Header */}
             <div>
               {product.category && (
-                <Badge variant="outline" className="bg-chart-2 text-white mb-3">
+                <Badge variant="outline" className="bg-accent/80 text-white mb-3">
                   {product.category}
                 </Badge>
               )}
               <h1 className="text-4xl font-sans font-normal mb-2">{product.name}</h1>
-              <p className="text-3xl font-light text-accent">{product.price.toFixed(2)} €</p>
+              <p className="text-3xl font-light text-accent">{product.price.toFixed(2)} TND</p>
             </div>
 
             <Separator />
@@ -288,7 +288,7 @@ export function ProductDetail({ product }: ProductDetailProps) {
               <h3 className="text-lg font-light mb-4">Détails du produit</h3>
               <ul className="space-y-2 text-sm text-muted-foreground font-light">
                 {product.category && <li>• Catégorie: {product.category}</li>}
-                <li>• Livraison gratuite à partir de 100€</li>
+                <li>• Livraison gratuite à partir de 100TND</li>
                 <li>• Retours gratuits sous 30 jours</li>
                 <li>• Paiement sécurisé</li>
               </ul>

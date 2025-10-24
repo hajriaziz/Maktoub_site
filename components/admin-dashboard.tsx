@@ -101,7 +101,7 @@ export function AdminDashboard() {
               <p className="text-sm text-muted-foreground font-light">Revenu total</p>
               <TrendingUp className="h-5 w-5 text-muted-foreground" />
             </div>
-            <p className="text-3xl font-bold">{stats.totalRevenue.toFixed(2)}€</p>
+            <p className="text-3xl font-bold">{stats.totalRevenue.toFixed(2)}TND</p>
           </Card>
           <Card className="p-6">
             <div className="flex items-center justify-between mb-2">
@@ -125,114 +125,121 @@ export function AdminDashboard() {
             <TabsTrigger value="products">Produits</TabsTrigger>
             <TabsTrigger value="stock">Stock</TabsTrigger>
           </TabsList>
-          <TabsContent value="orders" className="space-y-4">
-            <Card className="p-6">
-              <h2 className="text-2xl font-serif font-light mb-6">Commandes récentes</h2>
-              {orders.length === 0 ? (
-                <p className="text-muted-foreground text-center py-8">Aucune commande pour le moment</p>
-              ) : (
-                <div className="space-y-4">
-                  {orders.map((order) => (
-                    <div key={order.id} className="border rounded-lg p-4">
-                      <div className="flex items-center justify-between mb-2">
-                        <div>
-                          <p className="font-medium">{order.order_number}</p>
-                          <p className="text-sm text-muted-foreground">
-                            {order.customer?.first_name} {order.customer?.last_name}
-                          </p>
-                        </div>
-                        <div className="text-right">
-                          <p className="font-bold">{order.total_amount.toFixed(2)}€</p>
-                          <Badge variant={order.status === "pending" ? "destructive" : "default"} >{order.status}</Badge>
-                        </div>
-                      </div>
-                      <div className="flex gap-2 mt-4">
-                        <Button size="sm" variant="outline" onClick={() => updateOrderStatus(order.id, "processing")}>
-                          En cours
-                        </Button>
-                        <Button size="sm" variant="outline" onClick={() => updateOrderStatus(order.id, "shipped")}>
-                          Expédié
-                        </Button>
-                        <Button size="sm" variant="outline" onClick={() => updateOrderStatus(order.id, "delivered")}>
-                          Livré
-                        </Button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-              <div className="mt-6 text-right">
-                <Link href="/admin/orders">
-                  <Button size="lg" variant="default" className="font-medium">
-                    <Edit className="h-5 w-5 mr-2" />
-                    Gérer les Commandes
-                  </Button>
-                </Link>
-              </div>
-            </Card>
-          </TabsContent>
-          <TabsContent value="products" className="space-y-4">
-            <Card className="p-6">
-              <h2 className="text-2xl font-serif font-light mb-6">Gestion des produits</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-                {products.map((product) => (
-                  <div key={product.id} className="border rounded-lg p-4">
-                    <img
-                      src={product.images[0] || "/placeholder.svg"}
-                      alt={product.name}
-                      className="w-full h-48 object-cover rounded mb-3"
-                    />
-                    <h3 className="font-medium mb-1">{product.name}</h3>
-                    <p className="text-sm text-muted-foreground mb-2">{product.category?.name}</p>
-                    <div className="flex items-center justify-between">
-                      <p className="font-bold text-accent">{product.price.toFixed(2)}€</p>
-                      <Badge variant={product.inStock ? "default" : "destructive"} >
-                        {product.inStock ? "En stock" : "Rupture"}
-                      </Badge>
-                    </div>
-                  </div>
-                ))}
+<TabsContent value="orders" className="space-y-4">
+  <Card className="p-6">
+    <h2 className="text-2xl font-serif font-light ">Commandes récentes</h2>
+    <div className="mt-6 text-right">
+      <Link href="/admin/orders">
+        <Button size="lg" variant="default" className="font-medium">
+          <Edit className="h-5 w-5 mr-2" />
+          Gérer les Commandes
+        </Button>
+      </Link>
+    </div>
+    {orders.length === 0 ? (
+      <p className="text-muted-foreground text-center py-8">Aucune commande pour le moment</p>
+    ) : (
+      <div className="space-y-4">
+        {orders.map((order) => (
+          <div key={order.id} className="border rounded-lg p-4">
+            <div className="flex items-center justify-between mb-2">
+              <div>
+                <p className="font-medium">{order.order_number}</p>
+                <p className="text-sm text-muted-foreground">
+                  {order.customer?.first_name} {order.customer?.last_name}
+                </p>
               </div>
               <div className="text-right">
-                <Link href="/admin/products">
-                  <Button size="lg" variant="default" className="font-medium">
-                    <Edit className="h-5 w-5 mr-2" />
-                    Gérer les Produits
-                  </Button>
-                </Link>
+                <p className="font-bold">{order.total_amount.toFixed(2)}TND</p>
+                <Badge variant={order.status === "pending" ? "destructive" : "default"}>{order.status}</Badge>
               </div>
-            </Card>
-          </TabsContent>
-          <TabsContent value="stock" className="space-y-4">
-            <Card className="p-6">
-              <h2 className="text-2xl font-serif font-light mb-6">Gestion du stock</h2>
-              <div className="space-y-4">
-                {products.map((product) => (
-                  <div key={product.id} className="border rounded-lg p-4">
-                    <div className="flex items-center gap-4 mb-3">
-                      <img
-                        src={product.images[0] || "/placeholder.svg"}
-                        alt={product.name}
-                        className="w-16 h-16 object-cover rounded"
-                      />
-                      <div className="flex-1">
-                        <h3 className="font-medium">{product.name}</h3>
-                        <p className="text-sm text-muted-foreground">{product.category?.name}</p>
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-                      {product.sizes.map((size: string) => (
-                        <div key={size} className="border rounded p-2 text-center">
-                          <p className="text-sm font-medium">{size}</p>
-                          <p className="text-xs text-muted-foreground">Stock disponible</p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </Card>
-          </TabsContent>
+            </div>
+            <div className="flex gap-2 mt-4">
+              <Button size="sm" variant="outline" onClick={() => updateOrderStatus(order.id, "processing")}>
+                En cours
+              </Button>
+              <Button size="sm" variant="outline" onClick={() => updateOrderStatus(order.id, "shipped")}>
+                Expédié
+              </Button>
+              <Button size="sm" variant="outline" onClick={() => updateOrderStatus(order.id, "delivered")}>
+                Livré
+              </Button>
+            </div>
+          </div>
+        ))}
+      </div>
+    )}
+  </Card>
+</TabsContent>
+<TabsContent value="products" className="space-y-4">
+  <Card className="p-6">
+    <h2 className="text-2xl font-serif font-light ">Gestion des produits</h2>
+    <div className="text-right">
+      <Link href="/admin/products">
+        <Button size="lg" variant="default" className="font-medium">
+          <Edit className="h-5 w-5 mr-2" />
+          Gérer les Produits
+        </Button>
+      </Link>
+    </div>
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+      {products.map((product) => (
+        <div key={product.id} className="border rounded-lg p-4">
+          <img
+            src={product.images[0] || "/placeholder.svg"}
+            alt={product.name}
+            className="w-full h-48 object-cover rounded mb-3"
+          />
+          <h3 className="font-medium mb-1">{product.name}</h3>
+          <p className="text-sm text-muted-foreground mb-2">{product.category?.name}</p>
+          <div className="flex items-center justify-between">
+            <p className="font-bold text-accent">{product.price.toFixed(2)}TND</p>
+            <Badge variant={product.inStock ? "default" : "destructive"}>{product.inStock ? "En stock" : "Rupture"}</Badge>
+          </div>
+        </div>
+      ))}
+    </div>
+  </Card>
+</TabsContent>
+<TabsContent value="stock" className="space-y-4">
+  <Card className="p-6">
+    <h2 className="text-2xl font-serif font-light mb-6">Gestion du stock</h2>
+    <div className="space-y-4">
+      {products.map((product) => (
+        <div key={product.id} className="border rounded-lg p-4">
+          <div className="flex items-center gap-4 mb-3">
+            <img
+              src={product.images[0] || "/placeholder.svg"}
+              alt={product.name}
+              className="w-16 h-16 object-cover rounded"
+            />
+            <div className="flex-1">
+              <h3 className="font-medium">{product.name}</h3>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+            {product.sizes.map((size: string) => {
+              const quantity = product.stock[size] || 0
+              const inStock = quantity > 0
+              return (
+                <div
+                  key={size}
+                  className={`border rounded p-2 text-center ${
+                    inStock ? "bg-accent/50" : "bg-chart-1/50"
+                  }  transition-colors`}
+                >
+                  <p className="text-sm font-medium text-white">{size}</p>
+                  <p className="text-xs text-white">Quantité: {quantity}</p>
+                  <p className="text-xs text-white">{inStock ? "En stock" : "Rupture"}</p>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      ))}
+    </div>
+  </Card>
+</TabsContent>
         </Tabs>
       </div>
     </div>

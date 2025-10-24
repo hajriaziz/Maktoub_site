@@ -1,10 +1,8 @@
+import { queryOne } from "@/lib/mysql-client"
 import { type NextRequest, NextResponse } from "next/server"
-import { createServerSupabaseClient } from "@/lib/supabase-server"
 
-// GET /api/stock?productId=xxx&size=M - Vérifier le stock d'un produit
 export async function GET(request: NextRequest) {
   try {
-    const supabase = await createServerSupabaseClient()
     const { searchParams } = new URL(request.url)
 
     const productId = searchParams.get("productId")
@@ -14,28 +12,26 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Product ID and size required" }, { status: 400 })
     }
 
-    // Récupérer l'ID de la taille
-    const { data: sizeData } = await supabase.from("sizes").select("id").eq("name", sizeName).single()
+    // Requête SQL pour récupérer le stock d'un produit spécifique
+    const sql = `
+      SELECT stock
+      FROM products
+      WHERE id = ?
+    `
 
-    if (!sizeData) {
-      return NextResponse.json({ error: "Size not found" }, { status: 404 })
+    const row = await queryOne<any>(sql, [productId])
+
+    if (!row) {
+      return NextResponse.json({ error: "Product not found" }, { status: 404 })
     }
 
-    // Récupérer le stock
-    const { data: stockData, error } = await supabase
-      .from("product_sizes")
-      .select("stock_quantity")
-      .eq("product_id", productId)
-      .eq("size_id", sizeData.id)
-      .single()
-
-    if (error || !stockData) {
-      return NextResponse.json({ available: false, quantity: 0 })
-    }
+    // Parser le champ stock (supposé être un JSON)
+    const stock = JSON.parse(row.stock)
+    const quantity = stock[sizeName] || 0
 
     return NextResponse.json({
-      available: stockData.stock_quantity > 0,
-      quantity: stockData.stock_quantity,
+      available: quantity > 0,
+      quantity,
     })
   } catch (error) {
     console.error("[v0] Error checking stock:", error)

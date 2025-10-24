@@ -24,13 +24,13 @@ export function ContactSection() {
                   <label htmlFor="firstName" className="block text-sm font-light text-foreground mb-2">
                     Prénom
                   </label>
-                  <Input id="firstName" placeholder="Votre prénom" className="font-light" />
+                  <Input id="firstName" placeholder="foulen" className="font-light" />
                 </div>
                 <div>
                   <label htmlFor="lastName" className="block text-sm font-light text-foreground mb-2">
                     Nom
                   </label>
-                  <Input id="lastName" placeholder="Votre nom" className="font-light" />
+                  <Input id="lastName" placeholder="ben foulen" className="font-light" />
                 </div>
               </div>
 
@@ -72,7 +72,7 @@ export function ContactSection() {
                   </div>
                   <div>
                     <p className="font-light text-foreground">Email</p>
-                    <p className="text-muted-foreground font-light">contact@maktoub.fr</p>
+                    <p className="text-muted-foreground font-light">contact@maktoub.tn</p>
                   </div>
                 </div>
 
@@ -82,7 +82,7 @@ export function ContactSection() {
                   </div>
                   <div>
                     <p className="font-light text-foreground">Téléphone</p>
-                    <p className="text-muted-foreground font-light">+33 1 23 45 67 89</p>
+                    <p className="text-muted-foreground font-light">+216 12 345 678</p>
                   </div>
                 </div>
 
@@ -93,9 +93,7 @@ export function ContactSection() {
                   <div>
                     <p className="font-light text-foreground">Adresse</p>
                     <p className="text-muted-foreground font-light">
-                      123 Rue de la Mode
-                      <br />
-                      75001 Paris, France
+                     Tunis
                     </p>
                   </div>
                 </div>
