@@ -69,7 +69,7 @@ const LivraisonDetails: React.FC = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {/* Grand Tunis */}
-                <div className="relative overflow-hidden rounded-2xl p-8 border border-border bg-secondary transform hover:scale-105 transition-all duration-500">
+                <div className="relative overflow-hidden rounded-2xl p-8 border border-border hover:bg-chart-5 transform hover:scale-105 transition-all duration-500">
                   <div className="absolute top-4 right-4">
                     <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-chart-3 text-foreground">
                       Express
@@ -236,7 +236,7 @@ const LivraisonDetails: React.FC = () => {
               </div>
 
               {/* Note importante */}
-              <div className="mt-8 p-6 bg-secondary rounded-2xl border border-border">
+              <div className="mt-8 p-6 hover:bg-chart-5 rounded-2xl border border-border">
                 <div className="flex items-start">
                   <svg
                     className="w-5 h-5 text-accent mt-1 mr-4 flex-shrink-0"
@@ -268,7 +268,7 @@ const LivraisonDetails: React.FC = () => {
               </h2>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="group p-8 rounded-2xl border border-border hover:border-accent hover:bg-secondary transition-all duration-300">
+                <div className="group p-8 rounded-2xl border border-border hover:border-accent hover:bg-chart-5 transition-all duration-300">
                   <div className="flex items-center mb-4">
                     <div className="w-12 h-12 bg-chart-3 rounded-2xl flex items-center justify-center mr-4 group-hover:bg-chart-3 transition-colors">
                       <svg
@@ -292,7 +292,7 @@ const LivraisonDetails: React.FC = () => {
                   </p>
                 </div>
 
-                <div className="group p-8 rounded-2xl border border-border hover:border-accent hover:bg-secondary transition-all duration-300">
+                <div className="group p-8 rounded-2xl border border-border hover:border-accent hover:bg-chart-5 transition-all duration-300">
                   <div className="flex items-center mb-4">
                     <div className="w-12 h-12 bg-chart-3  rounded-2xl flex items-center justify-center mr-4 group-hover:bg-chart-3 transition-colors">
                       <svg
@@ -316,7 +316,7 @@ const LivraisonDetails: React.FC = () => {
                   </p>
                 </div>
 
-                <div className="group p-8 rounded-2xl border border-border hover:border-accent hover:bg-secondary transition-all duration-300">
+                <div className="group p-8 rounded-2xl border border-border hover:border-accent hover:bg-chart-5 transition-all duration-300">
                   <div className="flex items-center mb-4">
                     <div className="w-12 h-12 bg-chart-3 rounded-2xl flex items-center justify-center mr-4 group-hover:bg-chart-3 transition-colors">
                       <svg
@@ -340,7 +340,7 @@ const LivraisonDetails: React.FC = () => {
                   </p>
                 </div>
 
-                <div className="group p-8 rounded-2xl border border-border hover:border-accent hover:bg-secondary transition-all duration-300">
+                <div className="group p-8 rounded-2xl border border-border hover:border-accent hover:bg-chart-5 transition-all duration-300">
                   <div className="flex items-center mb-4">
                     <div className="w-12 h-12 bg-chart-3 rounded-2xl flex items-center justify-center mr-4 group-hover:bg-chart-3 transition-colors">
                       <svg
@@ -389,19 +389,19 @@ const LivraisonDetails: React.FC = () => {
               </h3>
 
               <div className="space-y-5">
-                <div className="bg-secondary rounded-2xl p-5 border border-border">
+                <div className="bg-chart-5 rounded-2xl p-5 border border-border">
                   <p className="font-medium text-accent text-sm">Service Client Tunisie</p>
                   <p className="text-foreground text-lg font-semibold mt-1">+216 70 123 456</p>
                   <p className="text-muted-foreground text-sm mt-1">Lun-Sam: 8h-18h</p>
                 </div>
 
-                <div className="bg-secondary rounded-2xl p-5 border border-border">
+                <div className="bg-chart-5 rounded-2xl p-5 border border-border">
                   <p className="font-medium text-accent text-sm">Email</p>
                   <p className="text-foreground font-semibold mt-1">support.tn@maktoub.com</p>
                   <p className="text-muted-foreground text-sm mt-1">Réponse sous 24h</p>
                 </div>
 
-                <div className="bg-secondary rounded-2xl p-5 border border-border">
+                <div className="bg-chart-5 rounded-2xl p-5 border border-border">
                   <p className="font-medium text-foreground text-sm">Local Principale</p>
                   <p className="text-foreground font-semibold mt-1">Tunis</p>
                 </div>
@@ -501,7 +501,7 @@ const LivraisonDetails: React.FC = () => {
                 Paiements Acceptés
               </h3>
               <div className="grid grid-cols-2 gap-4">
-                <div className="bg-secondary p-4 rounded-2xl text-center border border-border">
+                <div className="bg-chart-5 p-4 rounded-2xl text-center border border-border">
                   <span className="text-sm font-medium text-foreground">Espèces</span>
                 </div>
               </div>
@@ -510,7 +510,7 @@ const LivraisonDetails: React.FC = () => {
         </div>
 
         {/* Commitment Section */}
-        <div className="mt-20 bg-secondary rounded-3xl p-16 border border-border">
+        <div className="mt-20 bg-chart-5 rounded-3xl p-16 border border-border">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-light text-foreground mb-6 tracking-tight">
               L'Excellence MAKTOUB

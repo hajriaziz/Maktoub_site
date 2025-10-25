@@ -38,7 +38,7 @@ export function ContactSection() {
                 <label htmlFor="email" className="block text-sm font-light text-foreground mb-2">
                   Email
                 </label>
-                <Input id="email" type="email" placeholder="votre@email.com" className="font-light" />
+                <Input id="email" type="email" placeholder="foulen.benfoulen@email.com" className="font-light" />
               </div>
 
               <div>

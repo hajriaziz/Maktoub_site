@@ -1,5 +1,5 @@
 export const metadata = {
-  title: "Gestion des commandes - Maktoub Admin",
+  title: "Information - Livraison",
   description: "Gérer toutes les commandes",
 }
 
