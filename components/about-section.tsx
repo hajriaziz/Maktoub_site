@@ -6,17 +6,18 @@ export function AboutSection() {
           <div>
             <h2 className="text-hero text-balance mb-8">L'histoire Maktoub</h2>
             <div className="space-y-6 text-lg font-light text-muted-foreground">
+                  <p className="text-pretty">
+      <strong>Maktoub - Là où les vêtements parlent.</strong>
+      </p>
               <p className="text-pretty">
                 Maktoub, qui signifie "c'est écrit" en arabe, incarne l'idée que chaque vêtement porte en lui une
                 destinée, une histoire unique qui se révèle à travers celui qui le porte.
               </p>
               <p className="text-pretty">
-                Notre vision est de créer des pièces intemporelles qui transcendent les tendances éphémères, alliant
-                l'authenticité du streetwear à l'élégance du luxe contemporain.
+                Nous puisons notre inspiration dans l'âme nostalgique de la Tunisie, des tissus ancestraux, des motifs chargés de mémoire.
               </p>
               <p className="text-pretty">
-                Chaque création Maktoub est pensée pour accompagner votre quotidien avec style, confort et caractère,
-                révélant votre personnalité unique dans chaque détail.
+               Imaginez : des pièces uniques qui racontent une histoire, la vôtre et la nôtre. où le passé dialogue avec le présent pour créer un style qui vous est résolument personnel.
               </p>
             </div>
           </div>

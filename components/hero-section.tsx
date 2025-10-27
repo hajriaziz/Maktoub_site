@@ -13,10 +13,10 @@ export function HeroSection() {
 
       {/* Content */}
       <div className="relative z-10 text-center max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 className="text-display text-balance mb-6">
-          L'élégance moderne
-          <br />
-          rencontre le streetwear
+        <h1 className="text-display text-balance mb-6"> 
+           Maktoub,
+           <br />
+          "Là où les vêtements parlent."
         </h1>
 
         <p className="text-xl text-muted-foreground font-light max-w-2xl mx-auto mb-8 text-pretty">

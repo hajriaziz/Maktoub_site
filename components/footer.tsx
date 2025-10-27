@@ -80,7 +80,7 @@ export function Footer() {
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-primary-foreground transition-colors">
+                <a href="/faq" className="hover:text-primary-foreground transition-colors">
                   FAQ
                 </a>
               </li>
