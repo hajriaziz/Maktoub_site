@@ -11,11 +11,27 @@ import { Footer } from "@/components/footer"
 
 export default function Home() {
   const [showVideo, setShowVideo] = useState(true)
+  const [currentTime, setCurrentTime] = useState("")
 
-  // Éviter le flash de contenu en attendant que l'état soit prêt
   useEffect(() => {
-    const timer = setTimeout(() => setShowVideo(true), 100)
-    return () => clearTimeout(timer)
+    const updateTime = () => {
+      const now = new Date()
+      const options: Intl.DateTimeFormatOptions = {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        timeZoneName: "short",
+      }
+      const formattedTime = now.toLocaleString("en-GB", options)
+      setCurrentTime(formattedTime)
+    }
+
+    updateTime()
+    const interval = setInterval(updateTime, 1000)
+    return () => clearInterval(interval)
   }, [])
 
   const handleVideoClick = () => {
@@ -27,37 +43,35 @@ export default function Home() {
       {showVideo ? (
         <div
           className="absolute inset-0 z-50 flex items-center justify-center"
-          onClick={handleVideoClick} // Appliqué à la div principale pour détecter tout clic
+          onClick={handleVideoClick}
         >
           <video
             autoPlay
             muted
             loop
             playsInline
-            className="w-full h-full object-cover cursor-pointer"
             preload="auto"
+            className="w-full h-full object-cover cursor-pointer"
           >
-            <source src="/maktoub.mp4" type="video/mp4" />
+            <source src="/IMG_6765.mp4" type="video/mp4" />
             Votre navigateur ne supporte pas la vidéo.
           </video>
-          {/* Cadre avec texte centré et fond semi-transparent */}
-          <div className="absolute top-1/10 left-1/2 transform -translate-x-1/2 flex flex-col items-center z-20 text-center">
+
+          {/* Cadre texte et logo */}
+<div className="absolute top-1/10 left-1/2 transform -translate-x-1/2 flex flex-col items-center z-20 text-center">
             <div className="bg-accent/20 p-6 rounded-lg">
-              {/* Logo */}
               <img
                 src="/Maktoub Logo Type - White.png"
                 alt="Logo Maktoub"
                 className="max-w-[120px] h-auto opacity-100 mx-auto"
               />
-              {/* Localisation et heure */}
               <div className="mt-4 text-white text-base">
-                Tunis, TN | Tuesday, October 21, 2025 at 02:24 PM GMT+1
+                Tunis, TN | {currentTime}
               </div>
-              {/* Texte principal */}
               <div className="mt-4 text-white text-lg font-bold leading-snug">
-                Click to enter<br />
+                Cliquez pour entrer<br />
                 إنزل بش تدخل<br />
-                Cliquez pour entrer
+                Click to enter
               </div>
             </div>
           </div>

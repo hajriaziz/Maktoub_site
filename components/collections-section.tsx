@@ -70,31 +70,32 @@ export function CollectionsSection() {
         <div className="flex justify-center">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl w-full">
             {categories.map((category) => (
-            <Link href={`/collections/${category.slug}`}>
-              <Card
-                key={category.id}
-                className="group overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
-              >
-                <div className="relative overflow-hidden">
-                  <img
-                    src={categoryImages[category.name] || "/images/collections/default.jpg"} // Utilise l'image par défaut si la clé n'existe pas
-                    alt={category.name}
-                    className="w-full h-80 object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-300" />
-                </div>
+  <Link 
+    key={category.id} 
+    href={`/collections/${category.slug}`}
+  >
+    <Card
+      className="group overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
+    >
+      <div className="relative overflow-hidden">
+        <img
+          src={categoryImages[category.name] || "/images/collections/default.jpg"}
+          alt={category.name}
+          className="w-full h-80 object-cover group-hover:scale-105 transition-transform duration-500"
+        />
+        <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-300" />
+      </div>
 
-                <div className="p-6">
-                  <h3 className="text-xl font-light mb-3 text-foreground">{category.name}</h3>
-                  <p className="text-muted-foreground font-light mb-4 text-pretty">{category.description}</p>
-                    <Button variant="ghost" className="p-0.5 h-auto font-light text-accent cursor-pointer ">
-                      Découvrir →
-                    </Button>
-                  
-                </div>
-              </Card>
-            </Link>
-            ))}
+      <div className="p-6">
+        <h3 className="text-xl font-light mb-3 text-foreground">{category.name}</h3>
+        <p className="text-muted-foreground font-light mb-4 text-pretty">{category.description}</p>
+        <Button variant="ghost" className="p-0.5 h-auto font-light text-accent cursor-pointer">
+          Découvrir →
+        </Button>
+      </div>
+    </Card>
+  </Link>
+))}
           </div>
         </div>
 
