@@ -37,7 +37,14 @@ export function AboutSection() {
         <div className="mt-24 grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="text-center">
             <div className="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-4">
-              <span className="text-2xl">✨</span>
+            <span className="text-2xl">
+<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M12 2l7 4v6c0 5-4 9-7 10-3-1-7-5-7-10V6z"/>
+  <path d="M9 12l2 2 4-4"/>
+</svg>
+</span>
+
+
             </div>
             <h3 className="text-xl font-light mb-3 text-foreground">Authenticité</h3>
             <p className="text-muted-foreground font-light text-pretty">
@@ -47,7 +54,16 @@ export function AboutSection() {
 
           <div className="text-center">
             <div className="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-4">
-              <span className="text-2xl">🎯</span>
+<span className="text-2xl">
+<svg width="32" height="32" viewBox="0 0 24 24" fill="none"
+     stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="12" cy="8" r="5"/>
+  <path d="M8.5 13.5L7 22l5-3 5 3-1.5-8.5"/>
+</svg>
+</span>
+
+
+
             </div>
             <h3 className="text-xl font-light mb-3 text-foreground">Qualité</h3>
             <p className="text-muted-foreground font-light text-pretty">
@@ -57,7 +73,15 @@ export function AboutSection() {
 
           <div className="text-center">
             <div className="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-4">
-              <span className="text-2xl">🚀</span>
+            <span className="text-2xl">
+<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M9 18h6"/>
+  <path d="M10 22h4"/>
+  <path d="M6 9a6 6 0 1112 0c0 3-2 5-3 6H9c-1-1-3-3-3-6z"/>
+</svg>
+</span>
+
+
             </div>
             <h3 className="text-xl font-light mb-3 text-foreground">Innovation</h3>
             <p className="text-muted-foreground font-light text-pretty">

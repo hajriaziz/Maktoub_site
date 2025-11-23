@@ -1,22 +1,22 @@
 export function LookbookSection() {
   const looks = [
     {
-      image: "/modern-streetwear-look--urban-fashion-model--luxur.jpg",
+      image: "AZU_8261.JPG",
       title: "Urban Minimalist",
       description: "L'essentiel revisité",
     },
     {
-      image: "/luxury-streetwear-outfit--high-end-urban-fashion--.jpg",
+      image: "AZU_8283 (1).JPG",
       title: "Street Luxury",
       description: "Élégance décontractée",
     },
     {
-      image: "/contemporary-fashion-look--modern-streetwear-styli.jpg",
+      image: "AZU_8279 (1).JPG",
       title: "Contemporary Edge",
       description: "Modernité assumée",
     },
     {
-      image: "/signature-streetwear-look--iconic-urban-fashion--l.jpg",
+      image: "AZU_8264.JPG",
       title: "Signature Style",
       description: "L'identité Maktoub",
     },
