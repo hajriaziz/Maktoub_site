@@ -69,7 +69,7 @@ export function Navigation() {
                 )}
               </Button>
             </Link>
-            <Link href="/collections/all">
+            <Link href="/collections">
               <Button variant="outline" size="sm" className="font-light tracking-wide bg-transparent cursor-pointer">
                 Shop
               </Button>
@@ -123,7 +123,7 @@ export function Navigation() {
                 Contact
               </a>
               <div className="px-3 py-2">
-                <Link href="/collections/all">
+                <Link href="/collections">
                   <Button variant="outline" size="sm" className="w-full font-light tracking-wide bg-transparent">
                     Shop
                   </Button>

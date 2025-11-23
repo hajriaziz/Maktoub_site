@@ -44,8 +44,8 @@ export function ContactSection() {
     formData.append("email", contactForm.email)
     formData.append("subject", contactForm.subject)
     formData.append("message", contactForm.message)
-
-    const response = await fetch("/api/contact", {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL
+    const response = await fetch(`${apiUrl}/contact/handle.php`, {
       method: "POST",
       body: formData,
     })
@@ -72,8 +72,8 @@ const handleSubscribeSubmit = async (e: React.FormEvent) => {
     const formData = new FormData()
     formData.append("type", "subscribe")
     formData.append("email", subscribeEmail)
-
-    const response = await fetch("/api/contact", {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL
+    const response = await fetch(`${apiUrl}/contact/handle.php`, {
       method: "POST",
       body: formData,
     })

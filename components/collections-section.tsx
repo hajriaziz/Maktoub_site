@@ -5,11 +5,10 @@ import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import Link from "next/link"
 
-// Définir une interface pour les catégories
+// Interface pour les catégories
 interface Category {
   id: string
   name: string
-  slug: string
   description: string
 }
 
@@ -20,16 +19,17 @@ export function CollectionsSection() {
   useEffect(() => {
     async function fetchCategories() {
       try {
-        const res = await fetch("/api/categories")
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL
+        const res = await fetch(`${apiUrl}/categories/get_all.php`)
         const data = await res.json()
-        // Vérifie que data.categories est un tableau et le caste correctement
+
         if (Array.isArray(data.categories)) {
           setCategories(data.categories)
         } else {
           setCategories([])
         }
       } catch (error) {
-        console.error("[v0] Error fetching categories:", error)
+        console.error("Erreur lors du chargement des catégories:", error)
       } finally {
         setLoading(false)
       }
@@ -41,66 +41,57 @@ export function CollectionsSection() {
   if (loading) {
     return (
       <section id="collections" className="py-24 bg-secondary/30">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div className="max-w-7xl mx-auto px-4 text-center">
           <p className="text-lg text-muted-foreground">Chargement des collections...</p>
         </div>
       </section>
     )
   }
 
-  // Typage de categoryImages avec les clés possibles
   const categoryImages: Record<string, string> = {
     "Collection Homme": "/home-section.jpg",
     "Collection Femme": "/femme-section.jpg",
-    //"Enfant": "/images/collections/enfant.jpg",
-    // Ajoute d'autres catégories ici
   }
 
   return (
     <section id="collections" className="py-24 bg-secondary/30">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4">
         <div className="text-center mb-16">
           <h2 className="text-hero text-balance mb-6">Nos Collections</h2>
-          <p className="text-lg text-muted-foreground font-light max-w-2xl mx-auto text-pretty">
-            Chaque collection Maktoub est pensée pour exprimer votre personnalité unique à travers des pièces
-            d'exception.
+          <p className="text-lg text-muted-foreground font-light max-w-2xl mx-auto">
+            Chaque collection Maktoub est pensée pour exprimer votre personnalité unique à travers des pièces d'exception.
           </p>
         </div>
 
         <div className="flex justify-center">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl w-full">
             {categories.map((category) => (
-  <Link 
-    key={category.id} 
-    href={`/collections/${category.slug}`}
-  >
-    <Card
-      className="group overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
-    >
-      <div className="relative overflow-hidden">
-        <img
-          src={categoryImages[category.name] || "/images/collections/default.jpg"}
-          alt={category.name}
-          className="w-full h-80 object-cover group-hover:scale-105 transition-transform duration-500"
-        />
-        <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-300" />
-      </div>
+              <Link key={category.id} href={`/collections?id=${category.id}`}>
+                <Card className="group overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all cursor-pointer">
+                  <div className="relative overflow-hidden">
+                    <img
+                      src={categoryImages[category.name] || "/images/collections/default.jpg"}
+                      alt={category.name}
+                      className="w-full h-80 object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                    <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-300" />
+                  </div>
 
-      <div className="p-6">
-        <h3 className="text-xl font-light mb-3 text-foreground">{category.name}</h3>
-        <p className="text-muted-foreground font-light mb-4 text-pretty">{category.description}</p>
-        <Button variant="ghost" className="p-0.5 h-auto font-light text-accent cursor-pointer">
-          Découvrir →
-        </Button>
-      </div>
-    </Card>
-  </Link>
-))}
+                  <div className="p-6">
+                    <h3 className="text-xl font-light mb-3 text-foreground">{category.name}</h3>
+                    <p className="text-muted-foreground font-light mb-4">{category.description}</p>
+                    <Button variant="ghost" className="p-0.5 h-auto font-light text-accent cursor-pointer">
+                      Découvrir →
+                    </Button>
+                  </div>
+                </Card>
+              </Link>
+            ))}
           </div>
         </div>
 
         <div className="text-center mt-12">
-          <Link href="/collections/all">
+          <Link href="/collections">
             <Button size="lg" variant="outline" className="font-light tracking-wide px-8 py-3 bg-transparent">
               Voir Toutes les Collections
             </Button>

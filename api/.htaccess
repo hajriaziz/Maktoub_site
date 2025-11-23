@@ -1,0 +1,10 @@
+# Activer la réécriture d'URL
+RewriteEngine On
+
+# Forcer la redirection vers HTTPS
+RewriteCond %{HTTPS} !=on
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Optionnel : forcer le www (décommente pour activer)
+RewriteCond %{HTTP_HOST} !^www\. [NC]
+RewriteRule ^ https://www.%{HTTP_HOST}%{REQUEST_URI} [L,R=301]

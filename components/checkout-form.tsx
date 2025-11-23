@@ -28,7 +28,7 @@ export function CheckoutForm() {
     country: "",
   })
 
-  const shippingCost = totalPrice >= 100 ? 0 : 9.99
+  const shippingCost = totalPrice >= 100 ? 0 : 8
   const finalTotal = totalPrice + shippingCost
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -41,7 +41,8 @@ export function CheckoutForm() {
   // Fonction pour envoyer l'email de confirmation
   const handleOrderConfirmation = async (orderId: string) => {
     try {
-      const response = await fetch('/api/send_mailing', {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL
+      const response = await fetch(`${apiUrl}/send-email.php`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -85,7 +86,8 @@ export function CheckoutForm() {
       }
 
       // Envoi de la commande vers l'API
-      const response = await fetch("/api/orders", {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL
+      const response = await fetch((`${apiUrl}/orders.php`), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -451,7 +453,7 @@ export function CheckoutForm() {
                           {item.selectedSize} • {item.selectedColor} • x{item.quantity}
                         </p>
                         <p className="text-sm font-light text-accent">
-                          {(item.product.price * item.quantity).toFixed(2)}€
+                          {(item.product.price * item.quantity).toFixed(2)}TND
                         </p>
                       </div>
                     </div>
@@ -464,16 +466,16 @@ export function CheckoutForm() {
                 <div className="space-y-3 mb-6">
                   <div className="flex justify-between text-sm font-light">
                     <span className="text-muted-foreground">Sous-total</span>
-                    <span>{totalPrice.toFixed(2)}€</span>
+                    <span>{totalPrice.toFixed(2)}TND</span>
                   </div>
                   <div className="flex justify-between text-sm font-light">
                     <span className="text-muted-foreground">Livraison</span>
-                    <span>{shippingCost === 0 ? "Gratuite" : `${shippingCost.toFixed(2)}€`}</span>
+                    <span>{shippingCost === 0 ? "Gratuite" : `${shippingCost.toFixed(2)}TND`}</span>
                   </div>
                   <Separator />
                   <div className="flex justify-between text-lg font-light">
                     <span className="font-medium">Total</span>
-                    <span className="font-medium text-accent">{finalTotal.toFixed(2)}€</span>
+                    <span className="font-medium text-accent">{finalTotal.toFixed(2)}TND</span>
                   </div>
                 </div>
 

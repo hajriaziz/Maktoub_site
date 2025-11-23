@@ -21,7 +21,7 @@ export function CartContent() {
           <p className="text-muted-foreground font-light mb-8">
             Découvrez nos collections et ajoutez des produits à votre panier.
           </p>
-          <Link href="/collections/all">
+          <Link href="/collections">
             <Button size="lg" className="font-light tracking-wide">
               Découvrir la boutique
             </Button>
@@ -44,107 +44,111 @@ export function CartContent() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* 🛍️ Liste des articles */}
           <div className="lg:col-span-2 space-y-4">
-            {items.map((item, index) => (
-              <Card
-                key={`${item.product.id}-${item.selectedSize}-${item.selectedColor}-${index}`}
-                className="p-6"
-              >
-                <div className="flex gap-6">
-                  {/* 🖼️ Image produit */}
-                  <Link href={`/products/${item.product.slug}`} className="flex-shrink-0">
-                    <img
-                      src={item.product.images?.[0] || "/placeholder.svg"}
-                      alt={item.product.name}
-                      className="w-32 h-32 object-cover rounded-lg"
-                    />
-                  </Link>
+  {items.map((item, index) => (
+    <Card
+      key={`${item.product.id}-${item.selectedSize}-${item.selectedColor}-${index}`}
+      className="p-4 sm:p-6"
+    >
+      <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
+        {/* Image produit */}
+        <Link
+          href={`/products/${item.product.slug}`}
+          className="flex-shrink-0"
+        >
+          <img
+            src={item.product.images?.[0] || "/placeholder.svg"}
+            alt={item.product.name}
+            className="w-20 h-20 sm:w-32 sm:h-32 object-cover rounded-lg mx-auto sm:mx-0"
+          />
+        </Link>
 
-                  {/* 📄 Infos produit */}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex justify-between items-start mb-2">
-                      <div>
-                        <Link href={`/products/${item.product.slug}`}>
-                          <h3 className="text-lg font-light hover:text-accent transition-colors">
-                            {item.product.name}
-                          </h3>
-                        </Link>
-                        {item.product.category && (
-                          <p className="text-sm text-muted-foreground font-light">
-                            {item.product.category}
-                          </p>
-                        )}
-                      </div>
-                      <p className="text-lg font-light text-accent">
-                        {Number(item.product.price).toFixed(2)} TND
-                      </p>
-                    </div>
-
-                    <div className="flex gap-4 mb-4 text-sm text-muted-foreground font-light">
-                      <span>Taille : {item.selectedSize}</span>
-                      <span>•</span>
-                      <span>Couleur : {item.selectedColor}</span>
-                    </div>
-
-                    {/* 🔢 Quantité */}
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          className="h-8 w-8 bg-transparent"
-                          onClick={() =>
-                            updateQuantity(
-                              item.product.id,
-                              item.selectedSize,
-                              item.selectedColor,
-                              item.quantity - 1
-                            )
-                          }
-                          disabled={item.quantity <= 1}
-                        >
-                          <Minus className="h-3 w-3" />
-                        </Button>
-
-                        <span className="text-sm font-light w-8 text-center">
-                          {item.quantity}
-                        </span>
-
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          className="h-8 w-8 bg-transparent"
-                          onClick={() =>
-                            updateQuantity(
-                              item.product.id,
-                              item.selectedSize,
-                              item.selectedColor,
-                              item.quantity + 1
-                            )
-                          }
-                          disabled={item.quantity >= 10}
-                        >
-                          <Plus className="h-3 w-3" />
-                        </Button>
-                      </div>
-
-                      {/* 🗑️ Supprimer */}
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="hover:bg-destructive text-destructive hover:text-white"
-                        onClick={() =>
-                          removeItem(item.product.id, item.selectedSize, item.selectedColor)
-                        }
-                      >
-                        <Trash2 className="h-4 w-4 mr-2" />
-                        Supprimer
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              </Card>
-            ))}
+        {/* Infos + Actions */}
+        <div className="flex-1 min-w-0 space-y-3">
+          {/* Nom + Prix */}
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2">
+            <div className="min-w-0">
+              <Link href={`/products/${item.product.slug}`}>
+                <h3 className="text-base sm:text-lg font-light hover:text-accent transition-colors line-clamp-2">
+                  {item.product.name}
+                </h3>
+              </Link>
+              {item.product.category && (
+                <p className="text-xs sm:text-sm text-muted-foreground font-light mt-1">
+                  {item.product.category}
+                </p>
+              )}
+            </div>
+            <p className="text-base sm:text-lg font-light text-accent whitespace-nowrap">
+              {Number(item.product.price).toFixed(2)} TND
+            </p>
           </div>
+
+          {/* Taille & Couleur */}
+          <div className="flex flex-wrap gap-2 text-xs sm:text-sm text-muted-foreground font-light">
+            <span>Taille : <strong>{item.selectedSize}</strong></span>
+            <span className="hidden sm:inline">•</span>
+            <span className="sm:ml-0">Couleur : <strong>{item.selectedColor}</strong></span>
+          </div>
+
+          {/* Quantité + Supprimer */}
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            {/* Quantité */}
+            <div className="flex items-center justify-center sm:justify-start gap-2">
+              <Button
+                variant="outline"
+                size="icon"
+                className="h-8 w-8"
+                onClick={() =>
+                  updateQuantity(
+                    item.product.id,
+                    item.selectedSize,
+                    item.selectedColor,
+                    item.quantity - 1
+                  )
+                }
+                disabled={item.quantity <= 1}
+              >
+                <Minus className="h-3 w-3" />
+              </Button>
+
+              <span className="w-8 text-center text-sm font-light">
+                {item.quantity}
+              </span>
+
+              <Button
+                variant="outline"
+                size="icon"
+                className="h-8 w-8"
+                onClick={() =>
+                  updateQuantity(
+                    item.product.id,
+                    item.selectedSize,
+                    item.selectedColor,
+                    item.quantity + 1
+                  )
+                }
+                disabled={item.quantity >= 10}
+              >
+                <Plus className="h-3 w-3" />
+              </Button>
+            </div>
+
+            {/* Supprimer */}
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 sm:h-9 sm:w-auto sm:px-3 hover:bg-destructive text-destructive hover:text-white mx-auto sm:mx-0"
+              onClick={() => removeItem(item.product.id, item.selectedSize, item.selectedColor)}
+            >
+              <Trash2 className="h-4 w-4" />
+              <span className="hidden sm:inline ml-2">Supprimer</span>
+            </Button>
+          </div>
+        </div>
+      </div>
+    </Card>
+  ))}
+</div>
 
           {/* 🧾 Résumé de commande */}
           <div className="lg:col-span-1">
@@ -186,7 +190,7 @@ export function CartContent() {
                 Passer la commande
               </Button>
 
-              <Link href="/collections/all">
+              <Link href="/collections">
                 <Button
                   variant="outline"
                   size="lg"

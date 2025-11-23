@@ -61,8 +61,9 @@ export function AdminOrders() {
 
     try {
       setLoading(true)
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL
       console.log(`Fetching orders for order_number: ${searchOrderNumber}`)
-      const res = await fetch(`/api/orders?order_number=${encodeURIComponent(searchOrderNumber)}`)
+      const res = await fetch(`${apiUrl}/orders.php?order_number=${encodeURIComponent(searchOrderNumber)}`)
       const data = await res.json()
       console.log("Raw API Response:", data)
 
@@ -97,7 +98,8 @@ export function AdminOrders() {
 
   async function updateOrderStatus(orderId: string, newStatus: string) {
     try {
-      const res = await fetch(`/api/orders/${orderId}`, {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL
+      const res = await fetch(`${apiUrl}/order.php?id=${orderId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status: newStatus }),

@@ -1,0 +1,11 @@
+{
+    "name": "aziz/api",
+    "autoload": {
+        "psr-4": {
+            "Aziz\\Api\\": "src/"
+        }
+    },
+    "require": {
+        "phpmailer/phpmailer": "^7.0"
+    }
+}

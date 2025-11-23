@@ -28,12 +28,12 @@ export function AdminDashboard() {
       setLoading(true)
 
       const headers = { Authorization: `Bearer ${localStorage.getItem("token")}` }
-
-      const productsRes = await fetch("/api/products", { headers })
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL
+      const productsRes = await fetch(`${apiUrl}/admin/products.php`, { headers })
       const productsData = await productsRes.json()
       setProducts(productsData.products || [])
 
-      const ordersRes = await fetch("/api/orders", { headers })
+      const ordersRes = await fetch(`${apiUrl}/orders.php`, { headers })
       const ordersData = await ordersRes.json()
       setOrders(ordersData.orders || [])
 
@@ -56,7 +56,8 @@ export function AdminDashboard() {
 
   async function updateOrderStatus(orderId: string, newStatus: string) {
     try {
-      const res = await fetch(`/api/orders/${orderId}`, {
+       const apiUrl = process.env.NEXT_PUBLIC_API_URL
+      const res = await fetch(`${apiUrl}/order.php?id=${orderId}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",

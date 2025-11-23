@@ -9,6 +9,8 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  output: 'export', // ✅ obligatoire pour générer un site statique
+
 }
 
 export default nextConfig

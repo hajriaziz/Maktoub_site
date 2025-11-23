@@ -1,5 +1,4 @@
 "use client"
-
 import type React from "react"
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
@@ -81,7 +80,8 @@ export default function AdminProductsManager() {
 
   const fetchProducts = async () => {
     try {
-      const response = await fetch("/api/admin/products")
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL
+      const response = await fetch(`${apiUrl}/admin/products.php`)
       const data = await response.json()
       if (data.success) {
         setProducts(data.products)
@@ -95,7 +95,8 @@ export default function AdminProductsManager() {
 
   const fetchCategories = async () => {
     try {
-      const response = await fetch("/api/categories")
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL
+      const response = await fetch(`${apiUrl}/categories/get_all.php`)
       const data = await response.json()
       if (data.success) {
         setCategories(data.categories)
@@ -108,23 +109,25 @@ export default function AdminProductsManager() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    const formDataToSend = new FormData()
-    formDataToSend.append("name", formData.name)
-    formDataToSend.append("slug", formData.slug)
-    formDataToSend.append("description", formData.description)
-    formDataToSend.append("longDescription", formData.longDescription)
-    formDataToSend.append("price", formData.price)
-    formDataToSend.append("categoryId", formData.categoryId)
-    formDataToSend.append("stock", JSON.stringify(formData.stock))
-    formDataToSend.append("colors", JSON.stringify(formData.colors))
-    formDataToSend.append("featured", formData.featured.toString())
+    const formDataToSend = new FormData();
+  formDataToSend.append("name", formData.name);
+  formDataToSend.append("slug", formData.slug);
+  formDataToSend.append("description", formData.description);
+  formDataToSend.append("longDescription", formData.longDescription);
+  formDataToSend.append("price", formData.price);
+  formDataToSend.append("categoryId", formData.categoryId);
+  formDataToSend.append("sizes", JSON.stringify(formData.sizes)); // ✅ important
+  formDataToSend.append("stock", JSON.stringify(formData.stock));
+  formDataToSend.append("colors", JSON.stringify(formData.colors));
+  formDataToSend.append("featured", formData.featured.toString());
 
-    formData.images.forEach((image) => {
-      formDataToSend.append("images", image)
-    })
+  formData.images.forEach((image) => {
+    formDataToSend.append("images[]", image) // images[]
+  })
 
-    try {
-      const response = await fetch("/api/admin/products", {
+    try { 
+       const apiUrl = process.env.NEXT_PUBLIC_API_URL
+      const response = await fetch(`${apiUrl}/admin/products.php`, {
         method: "POST",
         body: formDataToSend,
       })
@@ -149,8 +152,9 @@ export default function AdminProductsManager() {
   const handleDelete = async (id: string) => {
     if (!confirm("Êtes-vous sûr de vouloir supprimer ce produit?")) return
 
-    try {
-      const response = await fetch(`/api/admin/products/${id}`, {
+    try {        
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL
+      const response = await fetch(`${apiUrl}/admin/product_update.php?id=${id}`, {
         method: "DELETE",
       })
 
@@ -190,7 +194,7 @@ export default function AdminProductsManager() {
 const handleUpdate = async (e: React.FormEvent) => {
   e.preventDefault()
 
-  // Synchroniser les tailles avec les clés de stock
+  // Synchroniser stock avec tailles
   const updatedStock = { ...editFormData.stock }
   editFormData.sizes.forEach((size) => {
     if (!updatedStock[size]) updatedStock[size] = 0
@@ -200,27 +204,31 @@ const handleUpdate = async (e: React.FormEvent) => {
   })
 
   const formDataToSend = new FormData()
-  formDataToSend.append("id", editFormData.id)
   formDataToSend.append("name", editFormData.name)
   formDataToSend.append("slug", editFormData.slug)
   formDataToSend.append("description", editFormData.description)
   formDataToSend.append("longDescription", editFormData.longDescription)
   formDataToSend.append("price", editFormData.price)
   formDataToSend.append("categoryId", editFormData.categoryId)
-  formDataToSend.append("stock", JSON.stringify(updatedStock))
   formDataToSend.append("sizes", JSON.stringify(editFormData.sizes))
+  formDataToSend.append("stock", JSON.stringify(updatedStock))
   formDataToSend.append("colors", JSON.stringify(editFormData.colors))
   formDataToSend.append("featured", editFormData.featured.toString())
 
+  // CORRIGÉ : images[]
   editFormData.images.forEach((image) => {
-    formDataToSend.append("images", image)
+    formDataToSend.append("images[]", image) // images[]
   })
 
   try {
-    const response = await fetch(`/api/admin/products/${editFormData.id}`, {
-      method: "PATCH",
-      body: formDataToSend,
-    })
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL
+    const response = await fetch(
+      `${apiUrl}/admin/product_update.php?id=${editFormData.id}`,
+      {
+        method: "POST",
+        body: formDataToSend,
+      }
+    )
 
     const data = await response.json()
 
@@ -238,22 +246,21 @@ const handleUpdate = async (e: React.FormEvent) => {
     alert("Erreur lors de la mise à jour")
   }
 }
-  const resetForm = () => {
-    setFormData({
-      name: "",
-      slug: "",
-      description: "",
-      longDescription: "",
-      price: "",
-      categoryId: "",
-      images: [],
-      sizes: ["S", "M", "L", "XL"],
-      stock: {},
-      colors: [{ name: "Noir", hex: "#000000" }],
-      featured: false,
-    })
-  }
-
+const resetForm = () => {
+  setFormData({
+    name: "",
+    slug: "",
+    description: "",
+    longDescription: "",
+    price: "",
+    categoryId: "",
+    images: [],
+    sizes: ["S", "M", "L", "XL"],
+    stock: { S: 0, M: 0, L: 0, XL: 0 } as Record<string, number>, // CORRIGÉ
+    colors: [{ name: "Noir", hex: "#000000" }],
+    featured: false,
+  })
+}
   const addImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const newImages = Array.from(e.target.files)
@@ -487,36 +494,33 @@ const handleUpdate = async (e: React.FormEvent) => {
                     </div>
                   )}
                 </div>
-
-                <div>
+  <div>
   <Label>Tailles disponibles et Stock</Label>
-  {editFormData.sizes.map((size, index) => (
+  {formData.sizes.map((size, index) => (
     <div key={index} className="flex gap-2 mb-2">
       <Input
         value={size}
-        onChange={(e) =>
-          setEditFormData((prev) => {
-            const newSizes = [...prev.sizes]
-            newSizes[index] = e.target.value
-            return { ...prev, sizes: newSizes }
-          })
-        }
+        onChange={(e) => {
+          const newSizes = [...formData.sizes]
+          newSizes[index] = e.target.value
+          setFormData({ ...formData, sizes: newSizes })
+        }}
         placeholder="Taille (ex: S)"
       />
       <Input
         type="number"
-        value={editFormData.stock[size] || ""}
-        onChange={(e) => updateEditStock(size, e.target.value)}
+        value={formData.stock[size] ?? 0}
+        onChange={(e) => updateStock(size, e.target.value)}
         placeholder="Quantité"
         min="0"
       />
-      {editFormData.sizes.length > 1 && (
+      {formData.sizes.length > 1 && (
         <Button
           type="button"
           variant="outline"
           size="icon"
           onClick={() => {
-            setEditFormData((prev) => ({
+            setFormData((prev) => ({
               ...prev,
               sizes: prev.sizes.filter((_, i) => i !== index),
               stock: Object.fromEntries(
@@ -535,7 +539,7 @@ const handleUpdate = async (e: React.FormEvent) => {
     variant="outline"
     size="sm"
     onClick={() =>
-      setEditFormData((prev) => ({
+      setFormData((prev) => ({
         ...prev,
         sizes: [...prev.sizes, ""],
       }))
@@ -545,7 +549,6 @@ const handleUpdate = async (e: React.FormEvent) => {
     Ajouter une taille
   </Button>
 </div>
-
                 <div>
                   <Label>Couleurs</Label>
                   {formData.colors.map((color, index) => (
@@ -855,7 +858,9 @@ const handleUpdate = async (e: React.FormEvent) => {
                 <h3 className="font-semibold mb-1">{product.name}</h3>
                 <p className="text-sm text-muted-foreground mb-2">{product.categoryName}</p>
                 <p className="font-bold mb-2">{product.price.toFixed(2)} TND</p>
-                <p className="text-sm mb-2">Tailles: {product.sizes.join(", ")}</p>
+              <p className="text-sm mb-2">
+                Tailles: {Array.isArray(product.sizes) ? product.sizes.join(", ") : "—"}
+              </p>
                 <div className="flex gap-2">
                   <Button
                     variant="outline"

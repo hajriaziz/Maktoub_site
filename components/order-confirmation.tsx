@@ -34,7 +34,7 @@ export function OrderConfirmation() {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/collections/all">
+            <Link href="/collections">
               <Button size="lg" variant="outline" className="font-light tracking-wide bg-transparent w-full sm:w-auto">
                 Continuer mes achats
               </Button>

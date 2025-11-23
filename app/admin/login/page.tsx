@@ -18,8 +18,8 @@ export default function LoginPage() {
     e.preventDefault()
     setError("")
     setIsRedirecting(false)
-
-    const res = await fetch("/api/auth/login", {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL
+    const res = await fetch(`${apiUrl}/admin/auth/login.php`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
